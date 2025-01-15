@@ -30,11 +30,11 @@ public class LoginActivity extends AppCompatActivity {
         boolean isLoggedIn = sharedPreferences.getBoolean("estaLogueado", false);
 
         if (isLoggedIn) {
-            Log.d("MainActivity", "Usuario logueado");
+            Log.d("LoginActivity", "Usuario logueado");
             startActivity(new Intent(LoginActivity.this, MainActivity.class));
             finish();
         } else {
-            Log.d("MainActivity", "Usuario no logueado");
+            Log.d("LoginActivity", "Usuario no logueado");
             setContentView(R.layout.activity_login);
 
             buttonLogin = findViewById(R.id.buttonLogin);
@@ -57,11 +57,11 @@ public class LoginActivity extends AppCompatActivity {
                                 SharedPreferences.Editor editor = sharedPreferences.edit();
                                 editor.putBoolean("estaLogueado", true);
                                 editor.apply();
-                                Log.d("MainActivity", "Usuario logueado");
+                                Log.d("LoginActivity", "Usuario logueado");
                                 startActivity(new Intent(LoginActivity.this, MainActivity.class));
                                 finish(); //Para evitar que vuelva a la pantalla del loguin pulsando el boton de atras
                             } else {
-                                Log.d("MainActivity", "Credenciales no validas");
+                                Log.d("LoginActivity", "Credenciales no validas");
                                 Toast.makeText(LoginActivity.this, R.string.activity_login_toast_errorCredenciales, Toast.LENGTH_SHORT).show();
                                 buttonLogin.setEnabled(true);
                             }
@@ -71,7 +71,7 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onFailure() {
                         runOnUiThread(() -> {
-                            Log.d("MainActivity", "Credenciales no validas");
+                            Log.d("LoginActivity", "Credenciales no validas");
                             Toast.makeText(LoginActivity.this, R.string.activity_login_toast_errorCredenciales, Toast.LENGTH_SHORT).show();
                             buttonLogin.setEnabled(true);
                         });

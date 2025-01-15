@@ -3,6 +3,7 @@ package com.reto.trafikapp;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
@@ -15,10 +16,15 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.reto.trafikapp.model.Incidencia;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private MapView mapView;
+    private List<Incidencia> incidencias;
+    LlamadasAPI llamadasAPI = new LlamadasAPI();
 
     private static final String MAPVIEW_BUNDLE_KEY = "MapViewBundleKey";
 
@@ -37,6 +43,22 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         ImageButton ibtnLogout = findViewById(R.id.imageButtonLogout);
 
+        //Obtener las incidencias
+        llamadasAPI.getIncidencias(new LlamadasAPI.IncidenciasCallback() {
+            @Override
+            public void onSuccess(List<Incidencia> incidencias) {
+                MainActivity.this.incidencias = incidencias;
+                Log.d("MainActivity", "Incidencias: " + incidencias);
+                addIncidencias();
+            }
+
+            @Override
+            public void onFailure() {
+                Log.d("MainActivity", "Failed to retrieve incidencias.");
+            }
+        });
+
+
         ibtnLogout.setOnClickListener(v -> {
             SharedPreferences sharedPreferences = getSharedPreferences("config", MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -51,11 +73,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
-
-        LatLng ejemplo = new LatLng(43.347160, -1.793184);  // Ejemplo: Latitud y Longitud de Sydney
-        googleMap.addMarker(new MarkerOptions().position(ejemplo).title("Marcador en Plaiaundi"));
-        googleMap.moveCamera(CameraUpdateFactory.newLatLng(ejemplo));
-        googleMap.getUiSettings().setMapToolbarEnabled(false); // Ocultar los iconos de maps de abajo a la derecha
+        LatLng euskadi = new LatLng(43.010365, -2.609979);
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(euskadi, 7));
     }
 
     @Override
@@ -67,5 +86,16 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             outState.putBundle(MAPVIEW_BUNDLE_KEY, mapViewBundle);
         }
         mapView.onSaveInstanceState(mapViewBundle);
+    }
+
+    public void addIncidencias(){
+        runOnUiThread(() -> {
+            for (Incidencia incidencia : incidencias) {
+                LatLng latLng = new LatLng(incidencia.getLatitude(), incidencia.getLongitude());
+                mapView.getMapAsync(googleMap -> {
+                    googleMap.addMarker(new MarkerOptions().position(latLng).title(incidencia.getIncidenceType()));
+                });
+            }
+        });
     }
 }
