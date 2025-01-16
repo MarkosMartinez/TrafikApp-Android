@@ -18,6 +18,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.reto.trafikapp.adapter.MarcadorAdapter;
 import com.reto.trafikapp.model.Camara;
 import com.reto.trafikapp.model.Incidencia;
 
@@ -111,6 +112,17 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onMapReady(@NonNull GoogleMap googleMap) {
         LatLng euskadi = new LatLng(43.010365, -2.609979);
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(euskadi, 7));
+
+        googleMap.setInfoWindowAdapter(new MarcadorAdapter(getLayoutInflater()));
+
+        googleMap.setOnMarkerClickListener(marker -> {
+            marker.showInfoWindow(); // Muestra la ventana de información al hacer clic en el marcador
+            return true; // Devuelve true para indicar que has manejado el evento
+        });
+
+        // Ocultando la brujula, icono de carga y iconos de abajo
+        googleMap.getUiSettings().setMapToolbarEnabled(false);
+        googleMap.getUiSettings().setCompassEnabled(false);
         ocultarCarga();
     }
 
@@ -138,7 +150,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 mapView.getMapAsync(googleMap -> {
                     MarkerOptions markerOptions = new MarkerOptions()
                             .position(latLng)
-                            .title("Incidencia - " + incidencia.getIncidenceType())
                             .alpha(opacidad);
                     Marker marker = googleMap.addMarker(markerOptions);
                     marker.setTag(incidencia);
