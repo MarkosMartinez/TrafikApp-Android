@@ -23,7 +23,7 @@ public class MarcadorAdapter implements GoogleMap.InfoWindowAdapter{
             Incidencia incidencia = (Incidencia) tag;
 
             TextView tituloText = mWindow.findViewById(R.id.title);
-            tituloText.setText("Incidencia - " + incidencia.getIncidenceType());
+            tituloText.setText(incidencia.getIncidenceType());
 
             TextView causaText = mWindow.findViewById(R.id.causa);
             causaText.setText(incidencia.getCause());
@@ -31,7 +31,7 @@ public class MarcadorAdapter implements GoogleMap.InfoWindowAdapter{
             Camara camara = (Camara) tag;
 
             TextView tituloText = mWindow.findViewById(R.id.title);
-            tituloText.setText("Cámara - " + camara.getCameraName());
+            tituloText.setText(camara.getCameraName());
 
         }
     }

@@ -2,6 +2,7 @@ package com.reto.trafikapp;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageButton;
@@ -16,6 +17,7 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.reto.trafikapp.adapter.MarcadorAdapter;
@@ -38,6 +40,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     LlamadasAPI llamadasAPI = new LlamadasAPI();
     private final float opacidad = 0.70f;
     private List<Marker> marcadores = new ArrayList<>();
+    //private List<LatLng> paisVascoPolygon = new ArrayList<>();
 
 
     private static final String MAPVIEW_BUNDLE_KEY = "MapViewBundleKey";
@@ -53,6 +56,16 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (savedInstanceState != null) {
             mapViewBundle = savedInstanceState.getBundle(MAPVIEW_BUNDLE_KEY);
         }
+
+        // Coordenadas aproximadas del País Vasco
+        /*paisVascoPolygon.add(new LatLng(43.4, -3.2));
+        paisVascoPolygon.add(new LatLng(43.3, -2.5));
+        paisVascoPolygon.add(new LatLng(43.1, -1.8));
+        paisVascoPolygon.add(new LatLng(42.8, -1.7));
+        paisVascoPolygon.add(new LatLng(42.6, -2.5));
+        paisVascoPolygon.add(new LatLng(42.7, -3.2));
+        paisVascoPolygon.add(new LatLng(43.4, -3.2));*/
+
         mapView.onCreate(mapViewBundle);
         // Inicia la carga del mapa
         mapView.getMapAsync(this);
@@ -113,17 +126,34 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         LatLng euskadi = new LatLng(43.010365, -2.609979);
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(euskadi, 7));
 
-        googleMap.setInfoWindowAdapter(new MarcadorAdapter(getLayoutInflater()));
+        int modoOscuroFlags = getResources().getConfiguration().uiMode & android.content.res.Configuration.UI_MODE_NIGHT_MASK;
+        if (modoOscuroFlags == android.content.res.Configuration.UI_MODE_NIGHT_YES) {
+            try {
+                boolean correcto = googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style_dark));
+                if (!correcto) {
+                    Log.e("MainActivity", "Error al cambiar el estilo del mapa.");
+                }else {
+                    Log.d("MainActivity", "Estilo del mapa actualizado.");
+                }
+            } catch (Resources.NotFoundException e) {
+                Log.e("MainActivity", "Error al buscar el estilo. Error: ", e);
+            }
+        }
 
+        googleMap.setInfoWindowAdapter(new MarcadorAdapter(getLayoutInflater()));
         googleMap.setOnMarkerClickListener(marker -> {
-            marker.showInfoWindow(); // Muestra la ventana de información al hacer clic en el marcador
-            return true; // Devuelve true para indicar que has manejado el evento
+            marker.showInfoWindow();
+            return true;
         });
 
         // Ocultando la brujula, icono de carga y iconos de abajo
         googleMap.getUiSettings().setMapToolbarEnabled(false);
         googleMap.getUiSettings().setCompassEnabled(false);
         ocultarCarga();
+        /*PolygonOptions polygonOptions = new PolygonOptions()
+                .addAll(paisVascoPolygon)
+                .strokeColor(Color.RED);
+        googleMap.addPolygon(polygonOptions);*/
     }
 
     @Override

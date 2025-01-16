@@ -3,5 +3,7 @@
     <style name="Base.Theme.TrafikApp" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your dark theme here. -->
         <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+        <item name="colorSurface">@color/fondo_oscuro</item>
+        <item name="colorOnSurface">@color/white</item>
     </style>
 </resources>
