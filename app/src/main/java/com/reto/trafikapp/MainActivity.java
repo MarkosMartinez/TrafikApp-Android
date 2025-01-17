@@ -40,7 +40,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     LlamadasAPI llamadasAPI = new LlamadasAPI();
     private final float opacidad = 0.70f;
     private List<Marker> marcadores = new ArrayList<>();
-    //private List<LatLng> paisVascoPolygon = new ArrayList<>();
 
 
     private static final String MAPVIEW_BUNDLE_KEY = "MapViewBundleKey";
@@ -56,15 +55,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (savedInstanceState != null) {
             mapViewBundle = savedInstanceState.getBundle(MAPVIEW_BUNDLE_KEY);
         }
-
-        // Coordenadas aproximadas del País Vasco
-        /*paisVascoPolygon.add(new LatLng(43.4, -3.2));
-        paisVascoPolygon.add(new LatLng(43.3, -2.5));
-        paisVascoPolygon.add(new LatLng(43.1, -1.8));
-        paisVascoPolygon.add(new LatLng(42.8, -1.7));
-        paisVascoPolygon.add(new LatLng(42.6, -2.5));
-        paisVascoPolygon.add(new LatLng(42.7, -3.2));
-        paisVascoPolygon.add(new LatLng(43.4, -3.2));*/
 
         mapView.onCreate(mapViewBundle);
         // Inicia la carga del mapa
@@ -150,10 +140,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         googleMap.getUiSettings().setMapToolbarEnabled(false);
         googleMap.getUiSettings().setCompassEnabled(false);
         ocultarCarga();
-        /*PolygonOptions polygonOptions = new PolygonOptions()
-                .addAll(paisVascoPolygon)
-                .strokeColor(Color.RED);
-        googleMap.addPolygon(polygonOptions);*/
     }
 
     @Override

@@ -34,13 +34,15 @@
                 android:gravity="center"
                 android:paddingHorizontal="8dp" />
 
-            <ImageView
-                android:id="@+id/imageButton"
+            <ImageButton
+                android:id="@+id/imgBtnFav"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:src="@drawable/fav_sinseleccionar"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:padding="2dp" />
+                android:padding="2dp"
+                android:scaleType="centerInside" />
+
         </LinearLayout>
 
         <TextView

@@ -40,7 +40,7 @@
     "elementType": "labels.text.fill",
     "stylers": [
       {
-        "color": "#d59563"
+        "color": "#ECE2DA"
       }
     ]
   },
@@ -58,7 +58,7 @@
     "elementType": "labels.text.fill",
     "stylers": [
       {
-        "color": "#6b9a76"
+        "color": "#ECE2DA"
       }
     ]
   },
@@ -121,7 +121,7 @@
     "elementType": "labels.text.fill",
     "stylers": [
       {
-        "color": "#f3d19c"
+        "color": "#ECE2DA"
       }
     ]
   },
@@ -157,7 +157,7 @@
     "elementType": "labels.text.fill",
     "stylers": [
       {
-        "color": "#d59563"
+        "color": "#ECE2DA"
       }
     ]
   },
