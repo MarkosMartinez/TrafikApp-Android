@@ -19,19 +19,18 @@ public class MarcadorAdapter implements GoogleMap.InfoWindowAdapter{
 
     private void renderWindowText(Marker marker) {
         Object tag = marker.getTag();
+        TextView tituloText = vista.findViewById(R.id.title);
+        TextView causaText = vista.findViewById(R.id.causa);
         if (tag instanceof Incidencia) {
             Incidencia incidencia = (Incidencia) tag;
-
-            TextView tituloText = vista.findViewById(R.id.title);
             tituloText.setText(incidencia.getIncidenceType());
-
-            TextView causaText = vista.findViewById(R.id.causa);
+            causaText.setVisibility(View.VISIBLE);
             causaText.setText(incidencia.getCause());
         } else if (tag instanceof Camara) {
             Camara camara = (Camara) tag;
-
-            TextView tituloText = vista.findViewById(R.id.title);
             tituloText.setText(camara.getCameraName());
+            causaText.setText(null);
+            causaText.setVisibility(View.GONE);
 
         }
     }

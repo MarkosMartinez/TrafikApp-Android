@@ -1,11 +1,14 @@
 package com.reto.trafikapp;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -40,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     LlamadasAPI llamadasAPI = new LlamadasAPI();
     private final float opacidad = 0.70f;
     private List<Marker> marcadores = new ArrayList<>();
+    private GoogleMap mMap;
 
 
     private static final String MAPVIEW_BUNDLE_KEY = "MapViewBundleKey";
@@ -113,32 +117,38 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
+        mMap = googleMap;
         LatLng euskadi = new LatLng(43.010365, -2.609979);
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(euskadi, 7));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(euskadi, 7));
+
+        // Configurar el adaptador de InfoWindow
+        mMap.setInfoWindowAdapter(new MarcadorAdapter(getLayoutInflater()));
+
+        googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(Marker marker) {
+                // Aquí puedes realizar la acción deseada, como mostrar un Toast
+                Toast.makeText(getApplicationContext(), "Botón en InfoWindow pulsado", Toast.LENGTH_SHORT).show();
+                Log.d("InfoWindow", "Clic en InfoWindow para el marcador: " + marker.getTag());
+            }
+        });
+
 
         int modoOscuroFlags = getResources().getConfiguration().uiMode & android.content.res.Configuration.UI_MODE_NIGHT_MASK;
         if (modoOscuroFlags == android.content.res.Configuration.UI_MODE_NIGHT_YES) {
             try {
-                boolean correcto = googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style_dark));
+                boolean correcto = mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style_dark));
                 if (!correcto) {
                     Log.e("MainActivity", "Error al cambiar el estilo del mapa.");
-                }else {
-                    Log.d("MainActivity", "Estilo del mapa actualizado.");
                 }
             } catch (Resources.NotFoundException e) {
                 Log.e("MainActivity", "Error al buscar el estilo. Error: ", e);
             }
         }
 
-        googleMap.setInfoWindowAdapter(new MarcadorAdapter(getLayoutInflater()));
-        googleMap.setOnMarkerClickListener(marker -> {
-            marker.showInfoWindow();
-            return true;
-        });
-
         // Ocultando la brujula, icono de carga y iconos de abajo
-        googleMap.getUiSettings().setMapToolbarEnabled(false);
-        googleMap.getUiSettings().setCompassEnabled(false);
+        mMap.getUiSettings().setMapToolbarEnabled(false);
+        mMap.getUiSettings().setCompassEnabled(false);
         ocultarCarga();
     }
 
@@ -159,32 +169,70 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
-    public void addIncidencias(){
+    public void addIncidencias() {
         runOnUiThread(() -> {
-            for (Incidencia incidencia : incidencias) {
-                LatLng latLng = new LatLng(incidencia.getLatitude(), incidencia.getLongitude());
-                mapView.getMapAsync(googleMap -> {
+            mapView.getMapAsync(googleMap -> {
+                for (Incidencia incidencia : incidencias) {
+                    LatLng latLng = new LatLng(incidencia.getLatitude(), incidencia.getLongitude());
                     MarkerOptions markerOptions = new MarkerOptions()
                             .position(latLng)
                             .alpha(opacidad);
                     Marker marker = googleMap.addMarker(markerOptions);
                     marker.setTag(incidencia);
                     marcadores.add(marker);
+
+                    // Configurar el listener de clics en marcadores
                     googleMap.setOnMarkerClickListener(clickedMarker -> {
                         for (Marker m : marcadores) {
                             m.setAlpha(opacidad);
                         }
                         clickedMarker.setAlpha(1.0f);
-                        return false;
-                    });
 
-                    googleMap.setOnMapClickListener(mapClickLatLng -> {
-                        for (Marker m : marcadores) {
-                            m.setAlpha(opacidad);
-                        }
+                        Object tag = clickedMarker.getTag();
+                        clickedMarker.showInfoWindow();
+
+                        // Crear y mostrar el diálogo personalizado
+                        Dialog dialog = new Dialog(MainActivity.this);
+                        ImageButton imgBtnFav = dialog.findViewById(R.id.imgBtnFav);
+
+                        imgBtnFav.setOnClickListener(v -> {
+                            Toast.makeText(MainActivity.this, "¡Incidencia añadida a favoritos!", Toast.LENGTH_SHORT).show();
+                            dialog.dismiss();
+                        });
+
+                        dialog.show();
+                        return true;
                     });
+                }
+
+//                // Configurar el listener de clics en marcadores
+//                googleMap.setOnMarkerClickListener(clickedMarker -> {
+//                    for (Marker m : marcadores) {
+//                        m.setAlpha(opacidad);
+//                    }
+//                    clickedMarker.setAlpha(1.0f);
+//
+//                    Object tag = clickedMarker.getTag();
+//                        clickedMarker.showInfoWindow();
+//                        // Crear y mostrar el diálogo personalizado
+//                        Dialog dialog = new Dialog(MainActivity.this);
+//                        ImageButton imgBtnFav = dialog.findViewById(R.id.imgBtnFav);
+//
+//                        imgBtnFav.setOnClickListener(v -> {
+//                            Toast.makeText(MainActivity.this, "¡Incidencia añadida a favoritos!", Toast.LENGTH_SHORT).show();
+//                            dialog.dismiss();
+//                        });
+//
+//                        dialog.show();
+//                    return true;
+//                });
+
+                googleMap.setOnMapClickListener(mapClickLatLng -> {
+                    for (Marker m : marcadores) {
+                        m.setAlpha(opacidad);
+                    }
                 });
-            }
+            });
         });
     }
 
