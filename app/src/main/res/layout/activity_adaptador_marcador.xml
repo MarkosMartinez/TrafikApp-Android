@@ -34,8 +34,8 @@
                 android:gravity="center"
                 android:paddingHorizontal="8dp" />
 
-            <ImageButton
-                android:id="@+id/imgBtnFav"
+            <ImageView
+                android:id="@+id/imgFav"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:src="@drawable/fav_sinseleccionar"

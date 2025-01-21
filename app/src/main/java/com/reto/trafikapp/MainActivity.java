@@ -1,6 +1,5 @@
 package com.reto.trafikapp;
 
-import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
@@ -8,7 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.TextView;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -23,6 +22,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.reto.trafikapp.BBDD.IncidenciasFavoritosBBDD;
 import com.reto.trafikapp.adapter.MarcadorAdapter;
 import com.reto.trafikapp.model.Camara;
 import com.reto.trafikapp.model.Incidencia;
@@ -44,6 +44,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private final float opacidad = 0.70f;
     private List<Marker> marcadores = new ArrayList<>();
     private GoogleMap mMap;
+    IncidenciasFavoritosBBDD incidenciasFavoritosBBDD = new IncidenciasFavoritosBBDD(this);
 
 
     private static final String MAPVIEW_BUNDLE_KEY = "MapViewBundleKey";
@@ -74,6 +75,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 Log.d("MainActivity", "Incidencias: " + incidencias);
                 addIncidencias();
                 ocultarCarga();
+
+                //Comprobar las incidencias favoritas
+                incidenciasFavoritosBBDD.comprobarIncidencias(incidencias);
             }
 
             @Override
@@ -102,7 +106,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
 
-
         ibtnLogout.setOnClickListener(v -> {
             SharedPreferences sharedPreferences = getSharedPreferences("config", MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -118,20 +121,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
-        LatLng euskadi = new LatLng(43.010365, -2.609979);
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(euskadi, 7));
+        LatLng euskadi = new LatLng(43.189985,-2.407536);
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(euskadi, 9));
 
         // Configurar el adaptador de InfoWindow
-        mMap.setInfoWindowAdapter(new MarcadorAdapter(getLayoutInflater()));
-
-        googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
-            @Override
-            public void onInfoWindowClick(Marker marker) {
-                // Aquí puedes realizar la acción deseada, como mostrar un Toast
-                Toast.makeText(getApplicationContext(), "Botón en InfoWindow pulsado", Toast.LENGTH_SHORT).show();
-                Log.d("InfoWindow", "Clic en InfoWindow para el marcador: " + marker.getTag());
-            }
-        });
+        mMap.setInfoWindowAdapter(new MarcadorAdapter(getLayoutInflater(), incidenciasFavoritosBBDD));
 
 
         int modoOscuroFlags = getResources().getConfiguration().uiMode & android.content.res.Configuration.UI_MODE_NIGHT_MASK;
@@ -181,51 +175,25 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     marker.setTag(incidencia);
                     marcadores.add(marker);
 
-                    // Configurar el listener de clics en marcadores
-                    googleMap.setOnMarkerClickListener(clickedMarker -> {
-                        for (Marker m : marcadores) {
-                            m.setAlpha(opacidad);
+                    googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+                        @Override
+                        public void onInfoWindowClick(Marker marker) {
+
+                            // Obtener la incidencia del marcador
+                            Incidencia incidencia = (Incidencia) marker.getTag();
+
+                            // Insertar la incidencia en favoritos
+                            incidenciasFavoritosBBDD.alternarFavorito(incidencia);
+                            Toast.makeText(getApplicationContext(), "Lista de favoritos modificada!", Toast.LENGTH_SHORT).show();
+
+                            // Cambiar la imagen del ImageView
+                            View infoWindow = getLayoutInflater().inflate(R.layout.activity_adaptador_marcador, null);
+                            ImageView imgFav = infoWindow.findViewById(R.id.imgFav);
+                            imgFav.setImageResource(R.drawable.fav_seleccionado);
+                            marker.showInfoWindow();
                         }
-                        clickedMarker.setAlpha(1.0f);
-
-                        Object tag = clickedMarker.getTag();
-                        clickedMarker.showInfoWindow();
-
-                        // Crear y mostrar el diálogo personalizado
-                        Dialog dialog = new Dialog(MainActivity.this);
-                        ImageButton imgBtnFav = dialog.findViewById(R.id.imgBtnFav);
-
-                        imgBtnFav.setOnClickListener(v -> {
-                            Toast.makeText(MainActivity.this, "¡Incidencia añadida a favoritos!", Toast.LENGTH_SHORT).show();
-                            dialog.dismiss();
-                        });
-
-                        dialog.show();
-                        return true;
                     });
                 }
-
-//                // Configurar el listener de clics en marcadores
-//                googleMap.setOnMarkerClickListener(clickedMarker -> {
-//                    for (Marker m : marcadores) {
-//                        m.setAlpha(opacidad);
-//                    }
-//                    clickedMarker.setAlpha(1.0f);
-//
-//                    Object tag = clickedMarker.getTag();
-//                        clickedMarker.showInfoWindow();
-//                        // Crear y mostrar el diálogo personalizado
-//                        Dialog dialog = new Dialog(MainActivity.this);
-//                        ImageButton imgBtnFav = dialog.findViewById(R.id.imgBtnFav);
-//
-//                        imgBtnFav.setOnClickListener(v -> {
-//                            Toast.makeText(MainActivity.this, "¡Incidencia añadida a favoritos!", Toast.LENGTH_SHORT).show();
-//                            dialog.dismiss();
-//                        });
-//
-//                        dialog.show();
-//                    return true;
-//                });
 
                 googleMap.setOnMapClickListener(mapClickLatLng -> {
                     for (Marker m : marcadores) {
@@ -249,6 +217,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     Marker marker = googleMap.addMarker(markerOptions);
                     marker.setTag(camara);
                     marcadores.add(marker);
+
                     googleMap.setOnMarkerClickListener(clickedMarker -> {
                         for (Marker m : marcadores) {
                             m.setAlpha(opacidad);
