@@ -8,4 +8,9 @@
     <string name="activity_main_toast_logout">Sesion cerrada</string>
     <string name="activity_main_toast_error_incidencias">Error al obtener las incidencias</string>
     <string name="activity_main_toast_error_camaras">Error al obtener las camaras</string>
+    <string name="activity_main_toast_favoritoAlterado">Lista de favoritos modificada!</string>
+    <string name="camara_actions_bottom_sheet_titulo">Acciones de cámara</string>
+    <string name="camara_actions_bottom_sheet_añadirFavorito">Añadir a favoritos</string>
+    <string name="camara_actions_bottom_sheet_eliminarFavorito">Eliminar de favoritos</string>
+    <string name="camara_actions_bottom_sheet_masInfo">Más información</string>
 </resources>

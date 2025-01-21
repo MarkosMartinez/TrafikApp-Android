@@ -6,33 +6,32 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.reto.trafikapp.model.Camara;
 import com.reto.trafikapp.model.Incidencia;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
-public class IncidenciasFavoritosBBDD extends SQLiteOpenHelper {
-
-    private ArrayList<Incidencia> incidencias;
-    private static final String BD_NAME = "incidencias.db";
+public class CamarasFavoritosBBDD extends SQLiteOpenHelper {
+    private ArrayList<Incidencia> camaras;
+    private static final String BD_NAME = "camaras.db";
     private static final int DB_VERSION = 1;
-    public static final String TABLE_NAME = "Incidencia";
+    public static final String TABLE_NAME = "Camara";
 
-    private static final String ID = "incidenceId";
-    private static final String TIPO = "incidenceType";
-    private static final String CAUSA = "cause";
+    private static final String ID = "camaraId";
+    private static final String NOMBRE = "cameraName";
+    private static final String URLIMG = "urlImage";
     private static final String LATITUD = "latitude";
     private static final String LONGITUD = "longitude";
 
     private static final String CREATE_TABLE = "create table "
             + TABLE_NAME + "(" + ID + " TEXT PRIMARY KEY, "
-            + TIPO + " TEXT NOT NULL, " + CAUSA + " TEXT NOT NULL,"
+            + NOMBRE + " TEXT NOT NULL, " + URLIMG + " TEXT NOT NULL,"
             + LATITUD + " DOUBLE NOT NULL," + LONGITUD + " DOUBLE NOT NULL);";
 
     private final Context context;
 
-    public IncidenciasFavoritosBBDD(Context context){
+    public CamarasFavoritosBBDD(Context context){
         super(context, BD_NAME, null, DB_VERSION);
         this.context = context;
     }
@@ -48,9 +47,9 @@ public class IncidenciasFavoritosBBDD extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public void comprobarIncidencias(List<Incidencia> incidenciasApi) {
-        if (incidenciasApi == null) {
-            incidenciasApi = new ArrayList<>();
+    public void comprobarCamaras(List<Camara> camarasApi) {
+        if (camarasApi == null) {
+            camarasApi = new ArrayList<>();
         }
 
         SQLiteDatabase db = this.getWritableDatabase();
@@ -58,18 +57,18 @@ public class IncidenciasFavoritosBBDD extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery(query, null);
 
         while (cursor.moveToNext()) {
-            String id = cursor.getString(cursor.getColumnIndexOrThrow(ID));
+            int id = cursor.getInt(cursor.getColumnIndexOrThrow(ID));
             boolean existsInApi = false;
 
-            for (Incidencia incidencia : incidenciasApi) {
-                if (Objects.equals(incidencia.getIncidenceId(), id)) {
+            for (Camara camara : camarasApi) {
+                if (camara.getCameraId() == id) {
                     existsInApi = true;
                     break;
                 }
             }
 
             if (!existsInApi) {
-                Log.d("IncidenciasFavoritosBBDD", "Borrando incidencia con id: " + id);
+                Log.d("CamarasFavoritosBBDD", "Borrando camara con la id: " + id);
                 db.execSQL("DELETE FROM " + TABLE_NAME + " WHERE " + ID + " = '" + id + "'");
             }
         }
@@ -78,22 +77,22 @@ public class IncidenciasFavoritosBBDD extends SQLiteOpenHelper {
         db.close();
     }
 
-    public void alternarFavorito(Incidencia incidencia) {
+    public void alternarFavorito(Camara camara) {
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "SELECT * FROM " + TABLE_NAME + " WHERE " + ID + "=?";
-        Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(incidencia.getIncidenceId())});
+        Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(camara.getCameraId())});
 
         if (cursor.getCount() == 0) {
-            db.execSQL("INSERT INTO " + TABLE_NAME + " (" + ID + ", " + TIPO + ", " + CAUSA + ", " + LATITUD + ", " + LONGITUD + ") VALUES ('" + incidencia.getIncidenceId() + "', '" + incidencia.getIncidenceType() + "', '" + incidencia.getCause() + "', '" + incidencia.getLatitude() + "', '" + incidencia.getLongitude() + "')");
+            db.execSQL("INSERT INTO " + TABLE_NAME + " (" + ID + ", " + NOMBRE + ", " + URLIMG + ", " + LATITUD + ", " + LONGITUD + ") VALUES ('" + camara.getCameraId() + "', '" + camara.getCameraName() + "', '" + camara.getUrlImage() + "', '" + camara.getLatitude() + "', '" + camara.getLongitude() + "')");
         }else{
-            db.execSQL("DELETE FROM " + TABLE_NAME + " WHERE " + ID + " = '" + incidencia.getIncidenceId() + "'");
+            db.execSQL("DELETE FROM " + TABLE_NAME + " WHERE " + ID + " = '" + camara.getCameraId() + "'");
         }
 
         cursor.close();
         db.close();
     }
 
-    public Boolean esFavorito(String id){
+    public Boolean esFavorito(int id){
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "SELECT * FROM " + TABLE_NAME + " WHERE " + ID + " = '" + id + "'";
         Cursor cursor = db.rawQuery(query, null);

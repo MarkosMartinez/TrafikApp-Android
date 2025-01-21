@@ -5,9 +5,7 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -22,6 +20,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.reto.trafikapp.BBDD.CamarasFavoritosBBDD;
 import com.reto.trafikapp.BBDD.IncidenciasFavoritosBBDD;
 import com.reto.trafikapp.adapter.MarcadorAdapter;
 import com.reto.trafikapp.model.Camara;
@@ -45,6 +44,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private List<Marker> marcadores = new ArrayList<>();
     private GoogleMap mMap;
     IncidenciasFavoritosBBDD incidenciasFavoritosBBDD = new IncidenciasFavoritosBBDD(this);
+    CamarasFavoritosBBDD camarasFavoritosBBDD = new CamarasFavoritosBBDD(this);
 
 
     private static final String MAPVIEW_BUNDLE_KEY = "MapViewBundleKey";
@@ -96,6 +96,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 Log.d("MainActivity", "Camaras: " + camaras);
                 addCamaras();
                 ocultarCarga();
+
+                //Comprobar las camaras favoritas
+                camarasFavoritosBBDD.comprobarCamaras(camaras);
             }
 
             @Override
@@ -125,7 +128,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(euskadi, 9));
 
         // Configurar el adaptador de InfoWindow
-        mMap.setInfoWindowAdapter(new MarcadorAdapter(getLayoutInflater(), incidenciasFavoritosBBDD));
+        mMap.setInfoWindowAdapter(new MarcadorAdapter(getLayoutInflater(), incidenciasFavoritosBBDD, camarasFavoritosBBDD));
 
 
         int modoOscuroFlags = getResources().getConfiguration().uiMode & android.content.res.Configuration.UI_MODE_NIGHT_MASK;
@@ -175,24 +178,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     marker.setTag(incidencia);
                     marcadores.add(marker);
 
-                    googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
-                        @Override
-                        public void onInfoWindowClick(Marker marker) {
-
-                            // Obtener la incidencia del marcador
-                            Incidencia incidencia = (Incidencia) marker.getTag();
-
-                            // Insertar la incidencia en favoritos
-                            incidenciasFavoritosBBDD.alternarFavorito(incidencia);
-                            Toast.makeText(getApplicationContext(), "Lista de favoritos modificada!", Toast.LENGTH_SHORT).show();
-
-                            // Cambiar la imagen del ImageView
-                            View infoWindow = getLayoutInflater().inflate(R.layout.activity_adaptador_marcador, null);
-                            ImageView imgFav = infoWindow.findViewById(R.id.imgFav);
-                            imgFav.setImageResource(R.drawable.fav_seleccionado);
-                            marker.showInfoWindow();
-                        }
-                    });
                 }
 
                 googleMap.setOnMapClickListener(mapClickLatLng -> {
@@ -217,6 +202,29 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     Marker marker = googleMap.addMarker(markerOptions);
                     marker.setTag(camara);
                     marcadores.add(marker);
+
+                    googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+                        @Override
+                        public void onInfoWindowClick(Marker marker) {
+
+                            // Obtener la incidencia del marcador
+                            Object tag = marker.getTag();
+                            if (tag instanceof Incidencia) {
+                                Incidencia incidencia = (Incidencia) tag;
+
+                                // Insertar la incidencia en favoritos
+                                incidenciasFavoritosBBDD.alternarFavorito(incidencia);
+                                Toast.makeText(getApplicationContext(), R.string.activity_main_toast_favoritoAlterado, Toast.LENGTH_SHORT).show();
+                                marker.showInfoWindow();
+                            }else{
+                                if (tag instanceof Camara) {
+                                    Camara camara = (Camara) tag;
+                                    new CameraActionsBottomSheet(MainActivity.this, camarasFavoritosBBDD, marker).show(camara);
+                                }
+                            }
+                            
+                        }
+                    });
 
                     googleMap.setOnMarkerClickListener(clickedMarker -> {
                         for (Marker m : marcadores) {
