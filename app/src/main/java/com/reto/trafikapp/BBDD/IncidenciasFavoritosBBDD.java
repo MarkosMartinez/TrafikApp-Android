@@ -102,4 +102,10 @@ public class IncidenciasFavoritosBBDD extends SQLiteOpenHelper {
         db.close();
         return esFavorito;
     }
+
+    public void vaciar(){
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("DELETE FROM " + TABLE_NAME);
+        db.close();
+    }
 }

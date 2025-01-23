@@ -1,6 +1,8 @@
 package com.reto.trafikapp.model;
 
-public class Camara {
+import java.io.Serializable;
+
+public class Camara implements Serializable {
     private int id;
     private int cameraId;
     private int sourceId;

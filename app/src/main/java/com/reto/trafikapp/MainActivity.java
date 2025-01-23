@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         // Inicia la carga del mapa
         mapView.getMapAsync(this);
 
-        ImageButton ibtnLogout = findViewById(R.id.imageButtonLogout);
+        ImageButton imgBtnLogout = findViewById(R.id.imageButtonLogout);
 
         //Obtener las incidencias
         llamadasAPI.getIncidencias(new LlamadasAPI.IncidenciasCallback() {
@@ -109,14 +109,24 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
 
-        ibtnLogout.setOnClickListener(v -> {
+        imgBtnLogout.setOnClickListener(v -> {
+            AppConfig.vibrar(MainActivity.this, 200);
             SharedPreferences sharedPreferences = getSharedPreferences("config", MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putBoolean("estaLogueado", false);
             editor.apply();
+            incidenciasFavoritosBBDD.vaciar();
+            camarasFavoritosBBDD.vaciar();
             Toast.makeText(MainActivity.this, R.string.activity_main_toast_logout, Toast.LENGTH_SHORT).show();
             startActivity(new Intent(MainActivity.this, LoginActivity.class));
             finish();
+        });
+
+        imgBtnLogout.setOnLongClickListener(v -> {
+            AppConfig.vibrar(MainActivity.this, 100);
+            Toast.makeText(MainActivity.this, R.string.activity_main_toast_actualizandoMapa, Toast.LENGTH_SHORT).show();
+            recreate();
+            return true;
         });
 
     }
@@ -214,12 +224,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                                 // Insertar la incidencia en favoritos
                                 incidenciasFavoritosBBDD.alternarFavorito(incidencia);
+                                AppConfig.vibrar(MainActivity.this, 100);
                                 Toast.makeText(getApplicationContext(), R.string.activity_main_toast_favoritoAlterado, Toast.LENGTH_SHORT).show();
                                 marker.showInfoWindow();
                             }else{
                                 if (tag instanceof Camara) {
                                     Camara camara = (Camara) tag;
-                                    new CameraActionsBottomSheet(MainActivity.this, camarasFavoritosBBDD, marker).show(camara);
+                                    new CameraActionsBottomSheet(MainActivity.this, camarasFavoritosBBDD, marker).ver(camara);
                                 }
                             }
                             

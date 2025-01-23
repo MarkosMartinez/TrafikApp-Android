@@ -48,6 +48,7 @@ public class LoginActivity extends AppCompatActivity {
             });
 
             buttonLogin.setOnClickListener(v -> {
+                AppConfig.vibrar(this, 100);
                 buttonLogin.setEnabled(false);
                 llamadasAPI.login(editTextEmail.getText().toString(), editTextPass.getText().toString(), new LlamadasAPI.LoginCallback() {
                     @Override

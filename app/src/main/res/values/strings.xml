@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">TrafikApp</string>
+    <string name="activity_login_textView_titulo">Inicio de sesión</string>
     <string name="activity_login_input_email">Email</string>
     <string name="activity_login_input_password">Contraseña</string>
     <string name="activity_login_button_login">Iniciar Sesion</string>
@@ -9,6 +10,7 @@
     <string name="activity_main_toast_error_incidencias">Error al obtener las incidencias</string>
     <string name="activity_main_toast_error_camaras">Error al obtener las camaras</string>
     <string name="activity_main_toast_favoritoAlterado">Lista de favoritos modificada!</string>
+    <string name="activity_main_toast_actualizandoMapa">Actualizando mapa...</string>
     <string name="camara_actions_bottom_sheet_titulo">Acciones de cámara</string>
     <string name="camara_actions_bottom_sheet_añadirFavorito">Añadir a favoritos</string>
     <string name="camara_actions_bottom_sheet_eliminarFavorito">Eliminar de favoritos</string>
