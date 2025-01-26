@@ -15,6 +15,7 @@
     <string name="camara_actions_bottom_sheet_añadirFavorito">Añadir a favoritos</string>
     <string name="camara_actions_bottom_sheet_eliminarFavorito">Eliminar de favoritos</string>
     <string name="camara_actions_bottom_sheet_masInfo">Más información</string>
+    <string name="activity_camara_noDisponible">No disponible</string>
     <string name="activity_camara_textView_nombreCamara">Nombre:</string>
     <string name="activity_camara_textView_nombreCarretera">Carretera:</string>
     <string name="activity_camara_textView_ubicacion">Ubicación:</string>

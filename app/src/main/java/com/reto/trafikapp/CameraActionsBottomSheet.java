@@ -54,6 +54,7 @@ public class CameraActionsBottomSheet {
             intent.putExtra("camara", (Serializable) camara);
             context.startActivity(intent);
             bottomSheetDialog.dismiss();
+            marker.hideInfoWindow();
         });
 
         bottomSheetDialog.setContentView(bottomSheetView);
