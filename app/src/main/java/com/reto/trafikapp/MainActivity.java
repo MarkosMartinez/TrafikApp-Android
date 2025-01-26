@@ -3,6 +3,8 @@ package com.reto.trafikapp;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageButton;
@@ -37,6 +39,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private pl.droidsonroids.gif.GifImageView gif_loading;
     private final int cargamax = 3;
     private int carga = 0;
+    private final int widthMarcador = 78;
+    private final int widthMarcadorFav = 120;
+    private final int heightMarcador = 110;
+    private final int heightMarcadorFav = 130;
     private List<Incidencia> incidencias;
     private List<Camara> camaras;
     LlamadasAPI llamadasAPI = new LlamadasAPI();
@@ -181,13 +187,16 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             mapView.getMapAsync(googleMap -> {
                 for (Incidencia incidencia : incidencias) {
                     LatLng latLng = new LatLng(incidencia.getLatitude(), incidencia.getLongitude());
+                    int marcadorIncidenciaIcono = incidenciasFavoritosBBDD.esFavorito(incidencia.getIncidenceId()) ? R.drawable.marcador_incidencia_fav : R.drawable.marcador_incidencia;
+                    int widthMarcadorIncidencia = marcadorIncidenciaIcono == R.drawable.marcador_incidencia_fav ? widthMarcadorFav : widthMarcador;
+                    int heightMarcadorIncidencia = marcadorIncidenciaIcono == R.drawable.marcador_incidencia_fav ? heightMarcadorFav : heightMarcador;
                     MarkerOptions markerOptions = new MarkerOptions()
                             .position(latLng)
+                            .icon(BitmapDescriptorFactory.fromBitmap(Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), marcadorIncidenciaIcono), widthMarcadorIncidencia, heightMarcadorIncidencia, false)))
                             .alpha(opacidad);
                     Marker marker = googleMap.addMarker(markerOptions);
                     marker.setTag(incidencia);
                     marcadores.add(marker);
-
                 }
 
                 googleMap.setOnMapClickListener(mapClickLatLng -> {
@@ -204,10 +213,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             for (Camara camara : camaras) {
                 LatLng latLng = new LatLng(camara.getLatitude(), camara.getLongitude());
                 mapView.getMapAsync(googleMap -> {
+                    int marcadorCamaraIcono = camarasFavoritosBBDD.esFavorito(camara.getCameraId()) ? R.drawable.marcador_camara_fav : R.drawable.marcador_camara;
+                    int widthMarcadorCamara = marcadorCamaraIcono == R.drawable.marcador_camara_fav ? widthMarcadorFav : widthMarcador;
+                    int heightMarcadorCamara = marcadorCamaraIcono == R.drawable.marcador_camara_fav ? heightMarcadorFav : heightMarcador;
                     MarkerOptions markerOptions = new MarkerOptions()
                             .position(latLng)
-                            .title("Camara - " + camara.getCameraName())
-                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
+                            .icon(BitmapDescriptorFactory.fromBitmap(Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), marcadorCamaraIcono), widthMarcadorCamara, heightMarcadorCamara, false)))
                             .alpha(opacidad);
                     Marker marker = googleMap.addMarker(markerOptions);
                     marker.setTag(camara);
@@ -222,10 +233,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                             if (tag instanceof Incidencia) {
                                 Incidencia incidencia = (Incidencia) tag;
 
-                                // Insertar la incidencia en favoritos
+                                // Alternar favoritos la incidencia
                                 incidenciasFavoritosBBDD.alternarFavorito(incidencia);
                                 AppConfig.vibrar(MainActivity.this, 100);
                                 Toast.makeText(getApplicationContext(), R.string.activity_main_toast_favoritoAlterado, Toast.LENGTH_SHORT).show();
+                                int marcadorIncidenciaIcono = incidenciasFavoritosBBDD.esFavorito(incidencia.getIncidenceId()) ? R.drawable.marcador_incidencia_fav : R.drawable.marcador_incidencia;
+                                int widthMarcadorIncidencia = marcadorIncidenciaIcono == R.drawable.marcador_incidencia_fav ? widthMarcadorFav : widthMarcador;
+                                int heightMarcadorIncidencia = marcadorIncidenciaIcono == R.drawable.marcador_incidencia_fav ? heightMarcadorFav : heightMarcador;
+                                marker.setIcon(BitmapDescriptorFactory.fromBitmap(Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), marcadorIncidenciaIcono), widthMarcadorIncidencia, heightMarcadorIncidencia, false)));
                                 marker.showInfoWindow();
                             }else{
                                 if (tag instanceof Camara) {
@@ -233,7 +248,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                                     new CameraActionsBottomSheet(MainActivity.this, camarasFavoritosBBDD, marker).ver(camara);
                                 }
                             }
-                            
+
                         }
                     });
 
