@@ -49,6 +49,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private final float opacidad = 0.70f;
     private List<Marker> marcadores = new ArrayList<>();
     private GoogleMap mMap;
+    private ImageButton imageButtonFiltro;
     public static final int REQUEST_CODE_CAMERA_VIEW = 1;
     IncidenciasFavoritosBBDD incidenciasFavoritosBBDD = new IncidenciasFavoritosBBDD(this);
     CamarasFavoritosBBDD camarasFavoritosBBDD = new CamarasFavoritosBBDD(this);
@@ -62,6 +63,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         setContentView(R.layout.activity_main); // Llamarlo antes de los findViewById
         gif_loading = findViewById(R.id.gif_loading);
         gif_loading.setVisibility(pl.droidsonroids.gif.GifImageView.VISIBLE);
+        imageButtonFiltro = findViewById(R.id.imageButtonFiltro);
         mapView = findViewById(R.id.mapView);
         Bundle mapViewBundle = null;
         if (savedInstanceState != null) {
@@ -134,6 +136,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             Toast.makeText(MainActivity.this, R.string.activity_main_toast_actualizandoMapa, Toast.LENGTH_SHORT).show();
             recreate();
             return true;
+        });
+
+        imageButtonFiltro.setOnClickListener(v -> {
+            AppConfig.vibrar(MainActivity.this, 100);
+
         });
 
     }
