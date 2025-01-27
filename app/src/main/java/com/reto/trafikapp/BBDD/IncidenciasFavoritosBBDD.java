@@ -94,17 +94,13 @@ public class IncidenciasFavoritosBBDD extends SQLiteOpenHelper {
     }
 
     public Boolean esFavorito(String id){
-        SQLiteDatabase db = null;
-        Cursor cursor = null;
-        try {
-            db = this.getReadableDatabase();
-            String query = "SELECT * FROM " + TABLE_NAME + " WHERE " + ID + " = '" + id + "'";
-            cursor = db.rawQuery(query, null);
-            return cursor.getCount() > 0;
-        } finally {
-            if (cursor != null) cursor.close();
-            if (db != null) db.close();
-        }
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "SELECT * FROM " + TABLE_NAME + " WHERE " + ID + " = '" + id + "'";
+        Cursor cursor = db.rawQuery(query, null);
+        Boolean esFavorito = cursor.getCount() > 0;
+        cursor.close();
+        db.close();
+        return esFavorito;
     }
 
     public void vaciar(){

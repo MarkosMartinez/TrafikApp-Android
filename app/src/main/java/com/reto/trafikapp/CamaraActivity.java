@@ -1,5 +1,6 @@
 package com.reto.trafikapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -65,5 +66,13 @@ public class CamaraActivity extends AppCompatActivity implements Serializable {
         }
 
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent resultIntent = new Intent();
+        resultIntent.putExtra("camaraId", getIntent().getSerializableExtra("camara"));
+        setResult(RESULT_OK, resultIntent);
+        super.onBackPressed();
     }
 }
