@@ -19,5 +19,8 @@
     <string name="activity_camara_textView_nombreCamara">Nombre:</string>
     <string name="activity_camara_textView_nombreCarretera">Carretera:</string>
     <string name="activity_camara_textView_ubicacion">Ubicación:</string>
+    <string name="popup_filtro_camaras">Cámaras</string>
+    <string name="popup_filtro_incidencias">Incidencias</string>
+    <string name="popup_filtro_favoritos">Favoritos</string>
 
 </resources>

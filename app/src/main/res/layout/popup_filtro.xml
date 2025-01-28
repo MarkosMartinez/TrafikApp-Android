@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/marcador_fondo"
+    android:orientation="vertical"
+    android:padding="8dp"
+    android:elevation="4dp"
+    android:layout_marginEnd="100dp">
+
+    <CheckBox
+        android:id="@+id/checkBoxCamaras"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/popup_filtro_camaras"
+        android:checked="true"
+        android:paddingStart="4dp"
+        android:paddingEnd="8dp"
+        android:layout_marginBottom="4dp"/>
+
+    <CheckBox
+        android:id="@+id/checkBoxIncidencias"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/popup_filtro_incidencias"
+        android:checked="true"
+        android:paddingStart="4dp"
+        android:paddingEnd="8dp"
+        android:layout_marginBottom="4dp"/>
+
+    <CheckBox
+        android:id="@+id/checkBoxFavoritos"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/popup_filtro_favoritos"
+        android:checked="true"
+        android:paddingStart="4dp"
+        android:paddingEnd="8dp"/>
+
+</LinearLayout>

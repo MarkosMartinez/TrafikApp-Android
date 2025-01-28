@@ -7,7 +7,11 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.CheckBox;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -39,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private pl.droidsonroids.gif.GifImageView gif_loading;
     private final int cargamax = 3;
     private int carga = 0;
+    private boolean errorCarga = false;
     private final int widthMarcador = 78;
     private final int widthMarcadorFav = 120;
     private final int heightMarcador = 110;
@@ -53,6 +58,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public static final int REQUEST_CODE_CAMERA_VIEW = 1;
     IncidenciasFavoritosBBDD incidenciasFavoritosBBDD = new IncidenciasFavoritosBBDD(this);
     CamarasFavoritosBBDD camarasFavoritosBBDD = new CamarasFavoritosBBDD(this);
+    private CheckBox checkBoxCamaras;
+    private CheckBox checkBoxIncidencias;
+    private CheckBox checkBoxFavoritos;
 
 
     private static final String MAPVIEW_BUNDLE_KEY = "MapViewBundleKey";
@@ -92,6 +100,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onFailure() {
                 Log.d("MainActivity", "Error al obtener las incidencias.");
+                errorCarga = true;
                 runOnUiThread(() -> Toast.makeText(MainActivity.this, R.string.activity_main_toast_error_incidencias, Toast.LENGTH_LONG).show());
                 ocultarCarga();
             }
@@ -113,6 +122,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onFailure() {
                 Log.d("MainActivity", "Error al obtener las camaras.");
+                errorCarga = true;
                 runOnUiThread(() -> Toast.makeText(MainActivity.this, R.string.activity_main_toast_error_camaras, Toast.LENGTH_LONG).show());
                 ocultarCarga();
             }
@@ -141,8 +151,180 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         imageButtonFiltro.setOnClickListener(v -> {
             AppConfig.vibrar(MainActivity.this, 100);
 
+            View popupView = getLayoutInflater().inflate(R.layout.popup_filtro, null);
+            PopupWindow popupWindow = new PopupWindow(
+                    popupView,
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    true
+            );
+
+            checkBoxCamaras = popupView.findViewById(R.id.checkBoxCamaras);
+            checkBoxIncidencias = popupView.findViewById(R.id.checkBoxIncidencias);
+            checkBoxFavoritos = popupView.findViewById(R.id.checkBoxFavoritos);
+
+            cargarFiltros();
+
+            checkBoxCamaras.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                for (Marker marker : marcadores) {
+                    if(isChecked){
+                        if(marker.getTag() instanceof Camara){
+                            Camara camara = (Camara) marker.getTag();
+                            if (checkBoxFavoritos.isChecked()) {
+                                    marker.setVisible(true);
+                            }else{
+                                marker.setVisible(!camarasFavoritosBBDD.esFavorito(camara.getCameraId()));
+                            }
+                        }
+                        if(!checkBoxIncidencias.isChecked()){
+                            if(marker.getTag() instanceof Incidencia) {
+                                marker.setVisible(false);
+                            }
+                        }
+                    } else if (checkBoxFavoritos.isChecked() && !checkBoxIncidencias.isChecked()) {
+                        if(marker.getTag() instanceof Incidencia) {
+                            Incidencia incidencia = (Incidencia) marker.getTag();
+                            if (incidenciasFavoritosBBDD.esFavorito(incidencia.getIncidenceId())) {
+                                marker.setVisible(true);
+                            } else if (marker.getTag() instanceof Incidencia) {
+                                marker.setVisible(false);
+                            }
+                        } else if (marker.getTag() instanceof Camara){
+                            marker.setVisible(false);
+                            Camara camara = (Camara) marker.getTag();
+                            if (camarasFavoritosBBDD.esFavorito(camara.getCameraId())) {
+                                marker.setVisible(true);
+                            } else if (marker.getTag() instanceof Camara) {
+                                marker.setVisible(false);
+                            }
+                        }
+                    } else if (checkBoxFavoritos.isChecked() && marker.getTag() instanceof Camara && checkBoxIncidencias.isChecked()) {
+                        marker.setVisible(false);
+                    }else{
+                        if (marker.getTag() instanceof Camara){
+                            marker.setVisible(false);
+                        }
+                    }
+                }
+                guardarFiltros();
+            });
+
+            checkBoxIncidencias.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                for (Marker marker : marcadores) {
+                    if(isChecked){
+                        if(marker.getTag() instanceof Incidencia) {
+                            Incidencia incidencia = (Incidencia) marker.getTag();
+                            if (checkBoxFavoritos.isChecked()) {
+                                marker.setVisible(true);
+                            } else {
+                                marker.setVisible(!incidenciasFavoritosBBDD.esFavorito(incidencia.getIncidenceId()));
+                            }
+                        }
+                        if(!checkBoxCamaras.isChecked()){
+                            if(marker.getTag() instanceof Camara) {
+                                marker.setVisible(false);
+                            }
+                        }
+                    } else if (checkBoxFavoritos.isChecked() && !checkBoxCamaras.isChecked()) {
+                        if(marker.getTag() instanceof Incidencia) {
+                            Incidencia incidencia = (Incidencia) marker.getTag();
+                            if (incidenciasFavoritosBBDD.esFavorito(incidencia.getIncidenceId())) {
+                                marker.setVisible(true);
+                            } else if (marker.getTag() instanceof Incidencia) {
+                                marker.setVisible(false);
+                            }
+                        } else if (marker.getTag() instanceof Camara){
+                            marker.setVisible(false);
+                            Camara camara = (Camara) marker.getTag();
+                            if (camarasFavoritosBBDD.esFavorito(camara.getCameraId())) {
+                                marker.setVisible(true);
+                            } else if (marker.getTag() instanceof Camara) {
+                                marker.setVisible(false);
+                            }
+                        }
+                    } else if (checkBoxFavoritos.isChecked() && marker.getTag() instanceof Incidencia && checkBoxCamaras.isChecked()) {
+                        marker.setVisible(false);
+                    }else{
+                        if (marker.getTag() instanceof Incidencia){
+                            marker.setVisible(false);
+                        }
+                    }
+                }
+                guardarFiltros();
+            });
+
+            checkBoxFavoritos.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                for (Marker marker : marcadores) {
+                    if(isChecked && (checkBoxIncidencias.isChecked() || checkBoxCamaras.isChecked())){
+                        if(marker.getTag() instanceof Incidencia){
+                            Incidencia incidencia = (Incidencia) marker.getTag();
+                            if (checkBoxIncidencias.isChecked() && incidenciasFavoritosBBDD.esFavorito(incidencia.getIncidenceId())) {
+                                marker.setVisible(true);
+                            }
+                        } else if (marker.getTag() instanceof Camara){
+                            Camara camara = (Camara) marker.getTag();
+                            if (checkBoxFavoritos.isChecked() && camarasFavoritosBBDD.esFavorito(camara.getCameraId())) {
+                                marker.setVisible(true);
+                            }
+
+                        }
+                    }else if(isChecked){
+                        if(marker.getTag() instanceof Incidencia){
+                            Incidencia incidencia = (Incidencia) marker.getTag();
+                            if (incidenciasFavoritosBBDD.esFavorito(incidencia.getIncidenceId())) {
+                                marker.setVisible(true);
+                            }else{
+                                marker.setVisible(false);
+                            }
+                        } else if (marker.getTag() instanceof Camara){
+                            Camara camara = (Camara) marker.getTag();
+                            if (camarasFavoritosBBDD.esFavorito(camara.getCameraId())) {
+                                marker.setVisible(true);
+                            }else{
+                                marker.setVisible(false);
+                            }
+                        }
+                    }else{
+                        if(marker.getTag() instanceof Incidencia){
+                            Incidencia incidencia = (Incidencia) marker.getTag();
+                            if (incidenciasFavoritosBBDD.esFavorito(incidencia.getIncidenceId())) {
+                                marker.setVisible(false);
+                            }
+                        } else if (marker.getTag() instanceof Camara){
+                            Camara camara = (Camara) marker.getTag();
+                            if (camarasFavoritosBBDD.esFavorito(camara.getCameraId())) {
+                                marker.setVisible(false);
+                            }
+                        }
+                    }
+
+                }
+                guardarFiltros();
+            });
+
+            popupWindow.showAsDropDown(v);
         });
 
+    }
+
+    private void guardarFiltros(){
+        SharedPreferences sharedPreferences = getSharedPreferences("filtro", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean("camaras", checkBoxCamaras.isChecked());
+        editor.putBoolean("incidencias", checkBoxIncidencias.isChecked());
+        editor.putBoolean("favoritos", checkBoxFavoritos.isChecked());
+        editor.apply();
+    }
+
+    private void cargarFiltros(){
+        SharedPreferences sharedPreferences = getSharedPreferences("filtro", MODE_PRIVATE);
+        checkBoxCamaras.setChecked(sharedPreferences.getBoolean("camaras", true));
+        checkBoxIncidencias.setChecked(sharedPreferences.getBoolean("incidencias", true));
+        checkBoxFavoritos.setChecked(sharedPreferences.getBoolean("favoritos", true));
+
+        if (!sharedPreferences.contains("camaras") || !sharedPreferences.contains("incidencias") || !sharedPreferences.contains("favoritos")) {
+            guardarFiltros();
+        }
     }
 
     @Override
@@ -160,9 +342,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             try {
                 boolean correcto = mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style_dark));
                 if (!correcto) {
+                    errorCarga = true;
                     Log.e("MainActivity", "Error al cambiar el estilo del mapa.");
                 }
             } catch (Resources.NotFoundException e) {
+                errorCarga = true;
                 Log.e("MainActivity", "Error al buscar el estilo. Error: ", e);
             }
         }
@@ -185,8 +369,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     public void ocultarCarga(){
-        if(++carga >= cargamax) {
+        if(++carga >= cargamax && !errorCarga) {
             gif_loading.setVisibility(GifImageView.INVISIBLE);
+        }else if (errorCarga){
+            gif_loading.setImageResource(R.drawable.advertencia);
+            gif_loading.setVisibility(GifImageView.VISIBLE);
         }
     }
 
