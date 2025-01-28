@@ -11,6 +11,8 @@
     <string name="activity_main_toast_error_camaras">Error al obtener las camaras</string>
     <string name="activity_main_toast_favoritoAlterado">Lista de favoritos modificada!</string>
     <string name="activity_main_toast_actualizandoMapa">Actualizando mapa...</string>
+    <string name="activity_main_alert_dialog_errorTitulo">¡Error al cargar los datos!</string>
+    <string name="activity_main_alert_dialog_errorCarga">¡Comprueba tu conexion y reinicia la aplicacion!</string>
     <string name="camara_actions_bottom_sheet_titulo">Acciones de cámara</string>
     <string name="camara_actions_bottom_sheet_añadirFavorito">Añadir a favoritos</string>
     <string name="camara_actions_bottom_sheet_eliminarFavorito">Eliminar de favoritos</string>

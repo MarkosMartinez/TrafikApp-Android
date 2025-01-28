@@ -16,7 +16,8 @@
         android:checked="true"
         android:paddingStart="4dp"
         android:paddingEnd="8dp"
-        android:layout_marginBottom="4dp"/>
+        android:layout_marginBottom="4dp"
+        android:buttonTint="#00b5ff"/>
 
     <CheckBox
         android:id="@+id/checkBoxIncidencias"
@@ -26,7 +27,8 @@
         android:checked="true"
         android:paddingStart="4dp"
         android:paddingEnd="8dp"
-        android:layout_marginBottom="4dp"/>
+        android:layout_marginBottom="4dp"
+        android:buttonTint="#ff5861"/>
 
     <CheckBox
         android:id="@+id/checkBoxFavoritos"
@@ -35,6 +37,7 @@
         android:text="@string/popup_filtro_favoritos"
         android:checked="true"
         android:paddingStart="4dp"
-        android:paddingEnd="8dp"/>
+        android:paddingEnd="8dp"
+        android:buttonTint="#ffbe00"/>
 
 </LinearLayout>

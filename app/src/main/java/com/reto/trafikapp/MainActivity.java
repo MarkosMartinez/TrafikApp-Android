@@ -1,5 +1,6 @@
 package com.reto.trafikapp;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
@@ -371,9 +372,25 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void ocultarCarga(){
         if(++carga >= cargamax && !errorCarga) {
             gif_loading.setVisibility(GifImageView.INVISIBLE);
-        }else if (errorCarga){
-            gif_loading.setImageResource(R.drawable.advertencia);
-            gif_loading.setVisibility(GifImageView.VISIBLE);
+        }else if (errorCarga && carga >= 0){
+            carga = -1;
+            runOnUiThread(() -> {
+                gif_loading.setImageResource(R.drawable.gif_advertencia);
+                gif_loading.setVisibility(GifImageView.VISIBLE);
+                new AlertDialog.Builder(MainActivity.this)
+                    .setTitle(R.string.activity_main_alert_dialog_errorTitulo)
+                    .setMessage(R.string.activity_main_alert_dialog_errorCarga)
+                    .setPositiveButton(android.R.string.ok, (dialog, which) -> dialog.dismiss())
+                    .show();
+
+                gif_loading.setOnClickListener(v -> {
+                    new AlertDialog.Builder(MainActivity.this)
+                            .setTitle(R.string.activity_main_alert_dialog_errorTitulo)
+                            .setMessage(R.string.activity_main_alert_dialog_errorCarga)
+                            .setPositiveButton(android.R.string.ok, (dialog, which) -> dialog.dismiss())
+                            .show();
+                });
+            });
         }
     }
 
