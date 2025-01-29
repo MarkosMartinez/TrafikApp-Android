@@ -14,9 +14,10 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.Toast;
-
-import androidx.annotation.NonNull;
+import java.util.ArrayList;
+import java.util.List;
 import androidx.appcompat.app.AppCompatActivity;
+import pl.droidsonroids.gif.GifImageView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -27,19 +28,19 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
 import com.reto.trafikapp.BBDD.CamarasFavoritosBBDD;
 import com.reto.trafikapp.BBDD.IncidenciasFavoritosBBDD;
 import com.reto.trafikapp.adapter.MarcadorAdapter;
 import com.reto.trafikapp.model.Camara;
 import com.reto.trafikapp.model.Incidencia;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import pl.droidsonroids.gif.GifImageView;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
 
+    IncidenciasFavoritosBBDD incidenciasFavoritosBBDD = new IncidenciasFavoritosBBDD(this);
+    CamarasFavoritosBBDD camarasFavoritosBBDD = new CamarasFavoritosBBDD(this);
+    LlamadasAPI llamadasAPI = new LlamadasAPI();
     private MapView mapView;
     private pl.droidsonroids.gif.GifImageView gif_loading;
     private final int cargamax = 3;
@@ -51,19 +52,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private final int heightMarcadorFav = 130;
     private List<Incidencia> incidencias;
     private List<Camara> camaras;
-    LlamadasAPI llamadasAPI = new LlamadasAPI();
     private final float opacidad = 0.70f;
     private List<Marker> marcadores = new ArrayList<>();
     private GoogleMap mMap;
     private ImageButton imageButtonFiltro;
     public static final int REQUEST_CODE_CAMERA_VIEW = 1;
-    IncidenciasFavoritosBBDD incidenciasFavoritosBBDD = new IncidenciasFavoritosBBDD(this);
-    CamarasFavoritosBBDD camarasFavoritosBBDD = new CamarasFavoritosBBDD(this);
     private CheckBox checkBoxCamaras;
     private CheckBox checkBoxIncidencias;
     private CheckBox checkBoxFavoritos;
-
-
     private static final String MAPVIEW_BUNDLE_KEY = "MapViewBundleKey";
 
     @Override
@@ -80,7 +76,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
 
         mapView.onCreate(mapViewBundle);
-        // Inicia la carga del mapa
         mapView.getMapAsync(this);
 
         ImageButton imgBtnLogout = findViewById(R.id.imageButtonLogout);
@@ -114,7 +109,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 MainActivity.this.camaras = camaras;
                 Log.d("MainActivity", "Camaras: " + camaras);
                 addCamaras();
-                ocultarCarga();
+
 
                 //Comprobar las camaras favoritas
                 camarasFavoritosBBDD.comprobarCamaras(camaras);
@@ -312,7 +307,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
-    private void cargarFiltroFavoritos(){
+    public void cargarFiltroFavoritos(){
         SharedPreferences sharedPreferences = getSharedPreferences("filtro", MODE_PRIVATE);
         boolean camarasChecked = sharedPreferences.getBoolean("camaras", true);
         boolean incidenciasChecked = sharedPreferences.getBoolean("incidencias", true);
@@ -320,12 +315,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         for (Marker marker : marcadores) {
             if(favoritosChecked && (incidenciasChecked || camarasChecked)){
-                if(marker.getTag() instanceof Incidencia){
+                if(marker.getTag() instanceof Incidencia && incidenciasChecked){
                     Incidencia incidencia = (Incidencia) marker.getTag();
                     if (incidenciasChecked && incidenciasFavoritosBBDD.esFavorito(incidencia.getIncidenceId())) {
                         marker.setVisible(true);
                     }
-                } else if (marker.getTag() instanceof Camara){
+                } else if (marker.getTag() instanceof Camara && camarasChecked){
                     Camara camara = (Camara) marker.getTag();
                     if (favoritosChecked && camarasFavoritosBBDD.esFavorito(camara.getCameraId())) {
                         marker.setVisible(true);
@@ -366,7 +361,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     @Override
-    public void onMapReady(@NonNull GoogleMap googleMap) {
+    public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         LatLng euskadi = new LatLng(43.189985,-2.407536);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(euskadi, 9));
@@ -396,7 +391,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     @Override
-    protected void onSaveInstanceState(@NonNull Bundle outState) {
+    protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         Bundle mapViewBundle = outState.getBundle(MAPVIEW_BUNDLE_KEY);
         if (mapViewBundle == null) {
@@ -493,6 +488,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                                 int heightMarcadorIncidencia = marcadorIncidenciaIcono == R.drawable.marcador_incidencia_fav ? heightMarcadorFav : heightMarcador;
                                 marker.setIcon(BitmapDescriptorFactory.fromBitmap(Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), marcadorIncidenciaIcono), widthMarcadorIncidencia, heightMarcadorIncidencia, false)));
                                 marker.showInfoWindow();
+                                cargarFiltroFavoritos();
                             } else if (tag instanceof Camara) {
                                 Camara camara = (Camara) tag;
                                 new CamaraActionsBottomSheet(MainActivity.this, camarasFavoritosBBDD, marker).ver(camara);
@@ -516,7 +512,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 });
             }
 
-
             // Actualizar los iconos de los favoritos
             mapView.getMapAsync(googleMap -> {
                 for (Marker marker : marcadores) {
@@ -530,6 +525,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 }
                 cargarFiltroCamara();
                 cargarFiltroFavoritos();
+                ocultarCarga();
             });
 
         });
@@ -545,12 +541,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     Object tag = marker.getTag();
                     if (tag instanceof Camara) {
                         Camara markerCamara = (Camara) tag;
+                        //TODO Arreglar esto! Los datos se reciben correctamente pero no se actualiza el icono
                         if (markerCamara.getCameraId() == camara.getCameraId()) {
                             int marcadorCamaraIcono = camarasFavoritosBBDD.esFavorito(camara.getCameraId()) ? R.drawable.marcador_camara_fav : R.drawable.marcador_camara;
                             int widthCamaraIncidencia = marcadorCamaraIcono == R.drawable.marcador_camara_fav ? widthMarcadorFav : widthMarcador;
                             int heightCamaraIncidencia = marcadorCamaraIcono == R.drawable.marcador_camara_fav ? heightMarcadorFav : heightMarcador;
-                            marker.setIcon(BitmapDescriptorFactory.fromBitmap(
-                                    Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), marcadorCamaraIcono),widthCamaraIncidencia,heightCamaraIncidencia,false)));
+                            marker.setIcon(BitmapDescriptorFactory.fromBitmap(Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), marcadorCamaraIcono),widthCamaraIncidencia,heightCamaraIncidencia,false)));
+                            cargarFiltroFavoritos();
                             break;
                         }
                     }

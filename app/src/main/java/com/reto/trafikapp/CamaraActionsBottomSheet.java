@@ -42,7 +42,6 @@ public class CamaraActionsBottomSheet {
         TextView txtAddFavorite = bottomSheetView.findViewById(R.id.txtAddFavorite);
         ImageView imgAddFavorite = bottomSheetView.findViewById(R.id.imgFav);
 
-
         if (camarasFavoritosBBDD.esFavorito(camara.getCameraId())) {
             txtAddFavorite.setText(R.string.camara_actions_bottom_sheet_eliminarFavorito);
             imgAddFavorite.setImageResource(R.drawable.fav_seleccionado);

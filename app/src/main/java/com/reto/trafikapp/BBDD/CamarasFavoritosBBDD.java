@@ -7,13 +7,11 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import com.reto.trafikapp.model.Camara;
-import com.reto.trafikapp.model.Incidencia;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class CamarasFavoritosBBDD extends SQLiteOpenHelper {
-    private ArrayList<Incidencia> camaras;
     private static final String BD_NAME = "camaras.db";
     private static final int DB_VERSION = 1;
     public static final String TABLE_NAME = "Camara";
