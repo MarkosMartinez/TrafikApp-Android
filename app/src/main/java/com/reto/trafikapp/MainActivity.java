@@ -131,12 +131,23 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         imgBtnLogout.setOnClickListener(v -> {
             AppConfig.vibrar(MainActivity.this, 200);
-            SharedPreferences sharedPreferences = getSharedPreferences("config", MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putBoolean("estaLogueado", false);
-            editor.apply();
-            incidenciasFavoritosBBDD.vaciar();
-            camarasFavoritosBBDD.vaciar();
+            SharedPreferences spConfig = getSharedPreferences("config", MODE_PRIVATE);
+            SharedPreferences.Editor editorConfig = spConfig.edit();
+            editorConfig.putBoolean("estaLogueado", false);
+            editorConfig.apply();
+
+            //Para eliminar los favoritos al cerrar sesion
+            //incidenciasFavoritosBBDD.vaciar();
+            //camarasFavoritosBBDD.vaciar();
+
+            //Para restaurar los filtros al cerrar sesion
+            SharedPreferences spFiltros = getSharedPreferences("filtro", MODE_PRIVATE);
+            SharedPreferences.Editor editorFiltros = spFiltros.edit();
+            editorFiltros.putBoolean("camaras", false);
+            editorFiltros.putBoolean("incidencias", false);
+            editorFiltros.putBoolean("favoritos", false);
+            editorFiltros.apply();
+
             Toast.makeText(MainActivity.this, R.string.activity_main_toast_logout, Toast.LENGTH_SHORT).show();
             startActivity(new Intent(MainActivity.this, LoginActivity.class));
             finish();
@@ -160,6 +171,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     true
             );
 
+            popupWindow.showAsDropDown(v, 0, 15);
+
             checkBoxCamaras = popupView.findViewById(R.id.checkBoxCamaras);
             checkBoxIncidencias = popupView.findViewById(R.id.checkBoxIncidencias);
             checkBoxFavoritos = popupView.findViewById(R.id.checkBoxFavoritos);
@@ -167,154 +180,32 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             cargarFiltros();
 
             checkBoxCamaras.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                for (Marker marker : marcadores) {
-                    if(isChecked){
-                        if(marker.getTag() instanceof Camara){
-                            Camara camara = (Camara) marker.getTag();
-                            if (checkBoxFavoritos.isChecked()) {
-                                    marker.setVisible(true);
-                            }else{
-                                marker.setVisible(!camarasFavoritosBBDD.esFavorito(camara.getCameraId()));
-                            }
-                        }
-                        if(!checkBoxIncidencias.isChecked()){
-                            if(marker.getTag() instanceof Incidencia) {
-                                marker.setVisible(false);
-                            }
-                        }
-                    } else if (checkBoxFavoritos.isChecked() && !checkBoxIncidencias.isChecked()) {
-                        if(marker.getTag() instanceof Incidencia) {
-                            Incidencia incidencia = (Incidencia) marker.getTag();
-                            if (incidenciasFavoritosBBDD.esFavorito(incidencia.getIncidenceId())) {
-                                marker.setVisible(true);
-                            } else if (marker.getTag() instanceof Incidencia) {
-                                marker.setVisible(false);
-                            }
-                        } else if (marker.getTag() instanceof Camara){
-                            marker.setVisible(false);
-                            Camara camara = (Camara) marker.getTag();
-                            if (camarasFavoritosBBDD.esFavorito(camara.getCameraId())) {
-                                marker.setVisible(true);
-                            } else if (marker.getTag() instanceof Camara) {
-                                marker.setVisible(false);
-                            }
-                        }
-                    } else if (checkBoxFavoritos.isChecked() && marker.getTag() instanceof Camara && checkBoxIncidencias.isChecked()) {
-                        marker.setVisible(false);
-                    }else{
-                        if (marker.getTag() instanceof Camara){
-                            marker.setVisible(false);
-                        }
-                    }
-                }
-                guardarFiltros();
+                SharedPreferences sharedPreferences = getSharedPreferences("filtro", MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putBoolean("camaras", checkBoxCamaras.isChecked());
+                editor.apply();
+                cargarFiltroCamara();
             });
 
             checkBoxIncidencias.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                for (Marker marker : marcadores) {
-                    if(isChecked){
-                        if(marker.getTag() instanceof Incidencia) {
-                            Incidencia incidencia = (Incidencia) marker.getTag();
-                            if (checkBoxFavoritos.isChecked()) {
-                                marker.setVisible(true);
-                            } else {
-                                marker.setVisible(!incidenciasFavoritosBBDD.esFavorito(incidencia.getIncidenceId()));
-                            }
-                        }
-                        if(!checkBoxCamaras.isChecked()){
-                            if(marker.getTag() instanceof Camara) {
-                                marker.setVisible(false);
-                            }
-                        }
-                    } else if (checkBoxFavoritos.isChecked() && !checkBoxCamaras.isChecked()) {
-                        if(marker.getTag() instanceof Incidencia) {
-                            Incidencia incidencia = (Incidencia) marker.getTag();
-                            if (incidenciasFavoritosBBDD.esFavorito(incidencia.getIncidenceId())) {
-                                marker.setVisible(true);
-                            } else if (marker.getTag() instanceof Incidencia) {
-                                marker.setVisible(false);
-                            }
-                        } else if (marker.getTag() instanceof Camara){
-                            marker.setVisible(false);
-                            Camara camara = (Camara) marker.getTag();
-                            if (camarasFavoritosBBDD.esFavorito(camara.getCameraId())) {
-                                marker.setVisible(true);
-                            } else if (marker.getTag() instanceof Camara) {
-                                marker.setVisible(false);
-                            }
-                        }
-                    } else if (checkBoxFavoritos.isChecked() && marker.getTag() instanceof Incidencia && checkBoxCamaras.isChecked()) {
-                        marker.setVisible(false);
-                    }else{
-                        if (marker.getTag() instanceof Incidencia){
-                            marker.setVisible(false);
-                        }
-                    }
-                }
-                guardarFiltros();
+                SharedPreferences sharedPreferences = getSharedPreferences("filtro", MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putBoolean("incidencias", checkBoxIncidencias.isChecked());
+                editor.apply();
+                cargarFiltroIncidencias();
             });
 
             checkBoxFavoritos.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                for (Marker marker : marcadores) {
-                    if(isChecked && (checkBoxIncidencias.isChecked() || checkBoxCamaras.isChecked())){
-                        if(marker.getTag() instanceof Incidencia){
-                            Incidencia incidencia = (Incidencia) marker.getTag();
-                            if (checkBoxIncidencias.isChecked() && incidenciasFavoritosBBDD.esFavorito(incidencia.getIncidenceId())) {
-                                marker.setVisible(true);
-                            }
-                        } else if (marker.getTag() instanceof Camara){
-                            Camara camara = (Camara) marker.getTag();
-                            if (checkBoxFavoritos.isChecked() && camarasFavoritosBBDD.esFavorito(camara.getCameraId())) {
-                                marker.setVisible(true);
-                            }
+                SharedPreferences sharedPreferences = getSharedPreferences("filtro", MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putBoolean("favoritos", checkBoxFavoritos.isChecked());
+                editor.apply();
+                cargarFiltroFavoritos();
 
-                        }
-                    }else if(isChecked){
-                        if(marker.getTag() instanceof Incidencia){
-                            Incidencia incidencia = (Incidencia) marker.getTag();
-                            if (incidenciasFavoritosBBDD.esFavorito(incidencia.getIncidenceId())) {
-                                marker.setVisible(true);
-                            }else{
-                                marker.setVisible(false);
-                            }
-                        } else if (marker.getTag() instanceof Camara){
-                            Camara camara = (Camara) marker.getTag();
-                            if (camarasFavoritosBBDD.esFavorito(camara.getCameraId())) {
-                                marker.setVisible(true);
-                            }else{
-                                marker.setVisible(false);
-                            }
-                        }
-                    }else{
-                        if(marker.getTag() instanceof Incidencia){
-                            Incidencia incidencia = (Incidencia) marker.getTag();
-                            if (incidenciasFavoritosBBDD.esFavorito(incidencia.getIncidenceId())) {
-                                marker.setVisible(false);
-                            }
-                        } else if (marker.getTag() instanceof Camara){
-                            Camara camara = (Camara) marker.getTag();
-                            if (camarasFavoritosBBDD.esFavorito(camara.getCameraId())) {
-                                marker.setVisible(false);
-                            }
-                        }
-                    }
-
-                }
-                guardarFiltros();
             });
 
-            popupWindow.showAsDropDown(v);
         });
 
-    }
-
-    private void guardarFiltros(){
-        SharedPreferences sharedPreferences = getSharedPreferences("filtro", MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putBoolean("camaras", checkBoxCamaras.isChecked());
-        editor.putBoolean("incidencias", checkBoxIncidencias.isChecked());
-        editor.putBoolean("favoritos", checkBoxFavoritos.isChecked());
-        editor.apply();
     }
 
     private void cargarFiltros(){
@@ -323,8 +214,154 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         checkBoxIncidencias.setChecked(sharedPreferences.getBoolean("incidencias", true));
         checkBoxFavoritos.setChecked(sharedPreferences.getBoolean("favoritos", true));
 
-        if (!sharedPreferences.contains("camaras") || !sharedPreferences.contains("incidencias") || !sharedPreferences.contains("favoritos")) {
-            guardarFiltros();
+    }
+
+    private void cargarFiltroCamara(){
+        SharedPreferences sharedPreferences = getSharedPreferences("filtro", MODE_PRIVATE);
+        boolean camarasChecked = sharedPreferences.getBoolean("camaras", true);
+        boolean incidenciasChecked = sharedPreferences.getBoolean("incidencias", true);
+        boolean favoritosChecked = sharedPreferences.getBoolean("favoritos", true);
+
+        for (Marker marker : marcadores) {
+            if(camarasChecked){
+                if(marker.getTag() instanceof Camara){
+                    Camara camara = (Camara) marker.getTag();
+                    if (favoritosChecked) {
+                        marker.setVisible(true);
+                    }else{
+                        marker.setVisible(!camarasFavoritosBBDD.esFavorito(camara.getCameraId()));
+                    }
+                }
+                if(!incidenciasChecked){
+                    if(marker.getTag() instanceof Incidencia) {
+                        marker.setVisible(false);
+                    }
+                }
+            } else if (favoritosChecked && !incidenciasChecked) {
+                if(marker.getTag() instanceof Incidencia) {
+                    Incidencia incidencia = (Incidencia) marker.getTag();
+                    if (incidenciasFavoritosBBDD.esFavorito(incidencia.getIncidenceId())) {
+                        marker.setVisible(true);
+                    } else if (marker.getTag() instanceof Incidencia) {
+                        marker.setVisible(false);
+                    }
+                } else if (marker.getTag() instanceof Camara){
+                    marker.setVisible(false);
+                    Camara camara = (Camara) marker.getTag();
+                    if (camarasFavoritosBBDD.esFavorito(camara.getCameraId())) {
+                        marker.setVisible(true);
+                    } else if (marker.getTag() instanceof Camara) {
+                        marker.setVisible(false);
+                    }
+                }
+            } else if (favoritosChecked && marker.getTag() instanceof Camara && incidenciasChecked) {
+                marker.setVisible(false);
+            }else{
+                if (marker.getTag() instanceof Camara){
+                    marker.setVisible(false);
+                }
+            }
+        }
+    }
+
+    private void cargarFiltroIncidencias(){
+        SharedPreferences sharedPreferences = getSharedPreferences("filtro", MODE_PRIVATE);
+        boolean camarasChecked = sharedPreferences.getBoolean("camaras", true);
+        boolean incidenciasChecked = sharedPreferences.getBoolean("incidencias", true);
+        boolean favoritosChecked = sharedPreferences.getBoolean("favoritos", true);
+
+        for (Marker marker : marcadores) {
+            if(incidenciasChecked){
+                if(marker.getTag() instanceof Incidencia) {
+                    Incidencia incidencia = (Incidencia) marker.getTag();
+                    if (favoritosChecked) {
+                        marker.setVisible(true);
+                    } else {
+                        marker.setVisible(!incidenciasFavoritosBBDD.esFavorito(incidencia.getIncidenceId()));
+                    }
+                }
+                if(!camarasChecked){
+                    if(marker.getTag() instanceof Camara) {
+                        marker.setVisible(false);
+                    }
+                }
+            } else if (favoritosChecked && !camarasChecked) {
+                if(marker.getTag() instanceof Incidencia) {
+                    Incidencia incidencia = (Incidencia) marker.getTag();
+                    if (incidenciasFavoritosBBDD.esFavorito(incidencia.getIncidenceId())) {
+                        marker.setVisible(true);
+                    } else if (marker.getTag() instanceof Incidencia) {
+                        marker.setVisible(false);
+                    }
+                } else if (marker.getTag() instanceof Camara){
+                    marker.setVisible(false);
+                    Camara camara = (Camara) marker.getTag();
+                    if (camarasFavoritosBBDD.esFavorito(camara.getCameraId())) {
+                        marker.setVisible(true);
+                    } else if (marker.getTag() instanceof Camara) {
+                        marker.setVisible(false);
+                    }
+                }
+            } else if (favoritosChecked && marker.getTag() instanceof Incidencia && camarasChecked) {
+                marker.setVisible(false);
+            }else{
+                if (marker.getTag() instanceof Incidencia){
+                    marker.setVisible(false);
+                }
+            }
+        }
+    }
+
+    private void cargarFiltroFavoritos(){
+        SharedPreferences sharedPreferences = getSharedPreferences("filtro", MODE_PRIVATE);
+        boolean camarasChecked = sharedPreferences.getBoolean("camaras", true);
+        boolean incidenciasChecked = sharedPreferences.getBoolean("incidencias", true);
+        boolean favoritosChecked = sharedPreferences.getBoolean("favoritos", true);
+
+        for (Marker marker : marcadores) {
+            if(favoritosChecked && (incidenciasChecked || camarasChecked)){
+                if(marker.getTag() instanceof Incidencia){
+                    Incidencia incidencia = (Incidencia) marker.getTag();
+                    if (incidenciasChecked && incidenciasFavoritosBBDD.esFavorito(incidencia.getIncidenceId())) {
+                        marker.setVisible(true);
+                    }
+                } else if (marker.getTag() instanceof Camara){
+                    Camara camara = (Camara) marker.getTag();
+                    if (favoritosChecked && camarasFavoritosBBDD.esFavorito(camara.getCameraId())) {
+                        marker.setVisible(true);
+                    }
+
+                }
+            }else if(favoritosChecked){
+                if(marker.getTag() instanceof Incidencia){
+                    Incidencia incidencia = (Incidencia) marker.getTag();
+                    if (incidenciasFavoritosBBDD.esFavorito(incidencia.getIncidenceId())) {
+                        marker.setVisible(true);
+                    }else{
+                        marker.setVisible(false);
+                    }
+                } else if (marker.getTag() instanceof Camara){
+                    Camara camara = (Camara) marker.getTag();
+                    if (camarasFavoritosBBDD.esFavorito(camara.getCameraId())) {
+                        marker.setVisible(true);
+                    }else{
+                        marker.setVisible(false);
+                    }
+                }
+            }else{
+                if(marker.getTag() instanceof Incidencia){
+                    Incidencia incidencia = (Incidencia) marker.getTag();
+                    if (incidenciasFavoritosBBDD.esFavorito(incidencia.getIncidenceId())) {
+                        marker.setVisible(false);
+                    }
+                } else if (marker.getTag() instanceof Camara){
+                    Camara camara = (Camara) marker.getTag();
+                    if (camarasFavoritosBBDD.esFavorito(camara.getCameraId())) {
+                        marker.setVisible(false);
+                    }
+                }
+            }
+
         }
     }
 
@@ -373,7 +410,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         if(++carga >= cargamax && !errorCarga) {
             gif_loading.setVisibility(GifImageView.INVISIBLE);
         }else if (errorCarga && carga >= 0){
-            carga = -1;
+            carga = -100;
             runOnUiThread(() -> {
                 gif_loading.setImageResource(R.drawable.gif_advertencia);
                 gif_loading.setVisibility(GifImageView.VISIBLE);
@@ -408,7 +445,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         marker.setTag(incidencia);
                         marcadores.add(marker);
                     }
-
+                    cargarFiltroIncidencias();
                     // Actualizar los iconos de los favoritos
                     for (Marker marker : marcadores) {
                         Incidencia incidencia = (Incidencia) marker.getTag();
@@ -479,6 +516,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 });
             }
 
+
             // Actualizar los iconos de los favoritos
             mapView.getMapAsync(googleMap -> {
                 for (Marker marker : marcadores) {
@@ -490,7 +528,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         }
                     }
                 }
+                cargarFiltroCamara();
+                cargarFiltroFavoritos();
             });
+
         });
     }
 
