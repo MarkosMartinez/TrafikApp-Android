@@ -138,9 +138,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             //Para restaurar los filtros al cerrar sesion
             SharedPreferences spFiltros = getSharedPreferences("filtro", MODE_PRIVATE);
             SharedPreferences.Editor editorFiltros = spFiltros.edit();
-            editorFiltros.putBoolean("camaras", false);
-            editorFiltros.putBoolean("incidencias", false);
-            editorFiltros.putBoolean("favoritos", false);
+            editorFiltros.putBoolean("camaras", true);
+            editorFiltros.putBoolean("incidencias", true);
+            editorFiltros.putBoolean("favoritos", true);
             editorFiltros.apply();
 
             Toast.makeText(MainActivity.this, R.string.activity_main_toast_logout, Toast.LENGTH_SHORT).show();
@@ -491,6 +491,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                                 cargarFiltroFavoritos();
                             } else if (tag instanceof Camara) {
                                 Camara camara = (Camara) tag;
+                                AppConfig.vibrar(MainActivity.this, 100);
                                 new CamaraActionsBottomSheet(MainActivity.this, camarasFavoritosBBDD, marker).ver(camara);
                             }
                         }

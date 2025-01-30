@@ -1,5 +1,6 @@
 package com.reto.trafikapp.adapter;
 
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -35,7 +36,7 @@ public class MarcadorAdapter implements GoogleMap.InfoWindowAdapter{
             Incidencia incidencia = (Incidencia) tag;
             tituloText.setText(incidencia.getIncidenceType());
             descripcionText.setText(incidencia.getCause());
-            descripcionText.setVisibility(View.VISIBLE);
+            descripcionText.setTypeface(null, Typeface.NORMAL);
 
             if(incidenciasFavoritosBBDD.esFavorito(incidencia.getIncidenceId())){
                 imageView.setImageResource(R.drawable.fav_seleccionado);
@@ -45,8 +46,9 @@ public class MarcadorAdapter implements GoogleMap.InfoWindowAdapter{
         } else if (tag instanceof Camara) {
             Camara camara = (Camara) tag;
             tituloText.setText(camara.getCameraName());
-            descripcionText.setText(null);
-            descripcionText.setVisibility(View.GONE);
+            descripcionText.setText("Pulsa para ver mas informacion");
+            descripcionText.setTypeface(null, android.graphics.Typeface.ITALIC);
+
 
             if(camarasFavoritosBBDD.esFavorito(camara.getCameraId())){
                 imageView.setImageResource(R.drawable.fav_seleccionado);

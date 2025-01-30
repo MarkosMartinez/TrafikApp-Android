@@ -1,11 +1,14 @@
 <resources>
-    <string name="app_name">TrafikApp</string>
+    <string name="app_name" translatable="false">TrafikApp</string>
     <string name="activity_login_textView_titulo">Inicio de sesión</string>
     <string name="activity_login_input_email">Email</string>
     <string name="activity_login_input_password">Contraseña</string>
     <string name="activity_login_button_login">Iniciar Sesion</string>
     <string name="activity_login_toast_errorCredenciales">Credenciales no validas</string>
-    <string name="google_maps_key">AIzaSyDlGI_JifsSwqvvGfVNdiaqQNAS2Q9dcX8</string>
+    <string name="google_maps_key" translatable="false">AIzaSyDlGI_JifsSwqvvGfVNdiaqQNAS2Q9dcX8</string>
+    <string name="activity_main_filtroInfo_camaras">Cámaras</string>
+    <string name="activity_main_filtroInfo_incidencias">Incidencias</string>
+    <string name="activity_main_filtroInfo_favoritos">Favoritos</string>
     <string name="activity_main_toast_logout">Sesion cerrada</string>
     <string name="activity_main_toast_error_incidencias">Error al obtener las incidencias</string>
     <string name="activity_main_toast_error_camaras">Error al obtener las camaras</string>
@@ -17,6 +20,7 @@
     <string name="camara_actions_bottom_sheet_añadirFavorito">Añadir a favoritos</string>
     <string name="camara_actions_bottom_sheet_eliminarFavorito">Eliminar de favoritos</string>
     <string name="camara_actions_bottom_sheet_masInfo">Más información</string>
+    <string name="activity_adaptador_marcador_masInfo">Pulsa para ver más información</string>
     <string name="activity_camara_noDisponible">No disponible</string>
     <string name="activity_camara_textView_nombreCamara">Nombre:</string>
     <string name="activity_camara_textView_nombreCarretera">Carretera:</string>
