@@ -35,7 +35,6 @@
         <activity
             android:name=".MainActivity"
             android:exported="true" />
-        <activity android:name=".CamaraActivity" android:exported="true"/>
     </application>
 
 </manifest>

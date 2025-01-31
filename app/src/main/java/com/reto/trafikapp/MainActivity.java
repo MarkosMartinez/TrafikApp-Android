@@ -56,7 +56,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private List<Marker> marcadores = new ArrayList<>();
     private GoogleMap mMap;
     private ImageButton imageButtonFiltro;
-    public static final int REQUEST_CODE_CAMERA_VIEW = 1;
     private CheckBox checkBoxCamaras;
     private CheckBox checkBoxIncidencias;
     private CheckBox checkBoxFavoritos;
@@ -530,31 +529,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             });
 
         });
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE_CAMERA_VIEW && resultCode == RESULT_OK) {
-            Camara camara = (Camara) data.getSerializableExtra("camaraId");
-            if (camara != null) {
-                for (Marker marker : marcadores) {
-                    Object tag = marker.getTag();
-                    if (tag instanceof Camara) {
-                        Camara markerCamara = (Camara) tag;
-                        //TODO Arreglar esto! Los datos se reciben correctamente pero no se actualiza el icono
-                        if (markerCamara.getCameraId() == camara.getCameraId()) {
-                            int marcadorCamaraIcono = camarasFavoritosBBDD.esFavorito(camara.getCameraId()) ? R.drawable.marcador_camara_fav : R.drawable.marcador_camara;
-                            int widthCamaraIncidencia = marcadorCamaraIcono == R.drawable.marcador_camara_fav ? widthMarcadorFav : widthMarcador;
-                            int heightCamaraIncidencia = marcadorCamaraIcono == R.drawable.marcador_camara_fav ? heightMarcadorFav : heightMarcador;
-                            marker.setIcon(BitmapDescriptorFactory.fromBitmap(Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), marcadorCamaraIcono),widthCamaraIncidencia,heightCamaraIncidencia,false)));
-                            cargarFiltroFavoritos();
-                            break;
-                        }
-                    }
-                }
-            }
-        }
     }
 
 }
