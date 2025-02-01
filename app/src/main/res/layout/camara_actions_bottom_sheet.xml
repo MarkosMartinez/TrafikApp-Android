@@ -7,13 +7,32 @@
     android:orientation="vertical"
     android:padding="16dp">
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/camara_actions_bottom_sheet_titulo"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:layout_marginBottom="16dp"/>
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:text="@string/camara_actions_bottom_sheet_titulo"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <ImageView
+            android:id="@+id/imageViewFav"
+            android:layout_width="27dp"
+            android:layout_height="25dp"
+            android:layout_weight="0"
+            android:scaleType="fitXY"
+            app:srcCompat="@drawable/fav_sinseleccionar" />
+    </LinearLayout>
 
     <ImageView
         android:id="@+id/imageViewCamara"
@@ -96,30 +115,12 @@
             android:textSize="16sp" />
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/layoutAddFavorito"
+    <Button
+        android:id="@+id/buttonFavorito"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="12dp"
-        android:clickable="true"
-        android:focusable="true"
-        android:background="?attr/selectableItemBackground">
+        android:text="@string/camara_actions_bottom_sheet_añadirFavorito"
+        android:textColor="?attr/colorSurface" />
 
-        <ImageView
-            android:id="@+id/imgFav"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/fav_sinseleccionar" />
-
-        <TextView
-            android:id="@+id/txtAddFavorite"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:text="@string/camara_actions_bottom_sheet_añadirFavorito"
-            android:textSize="16sp"/>
-
-    </LinearLayout>
 
 </LinearLayout>

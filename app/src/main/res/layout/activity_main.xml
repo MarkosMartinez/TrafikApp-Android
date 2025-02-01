@@ -97,7 +97,7 @@
                     android:layout_marginStart="8dp"
                     android:layout_gravity="center_vertical"
                     android:text="@string/activity_main_filtroInfo_camaras"
-                    android:textColor="@android:color/black"
+                    android:textColor="?attr/colorOnSurface"
                     android:textSize="16sp" />
             </LinearLayout>
 
@@ -120,7 +120,7 @@
                     android:layout_marginStart="8dp"
                     android:layout_gravity="center_vertical"
                     android:text="@string/activity_main_filtroInfo_incidencias"
-                    android:textColor="@android:color/black"
+                    android:textColor="?attr/colorOnSurface"
                     android:textSize="16sp" />
             </LinearLayout>
 
@@ -144,7 +144,7 @@
                     android:layout_marginStart="3dp"
                     android:text="@string/activity_main_filtroInfo_favoritos"
                     android:layout_gravity="center_vertical"
-                    android:textColor="@android:color/black"
+                    android:textColor="?attr/colorOnSurface"
                     android:textSize="16sp" />
             </LinearLayout>
 

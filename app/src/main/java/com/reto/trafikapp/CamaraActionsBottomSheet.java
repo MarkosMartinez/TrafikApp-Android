@@ -1,12 +1,11 @@
 package com.reto.trafikapp;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,7 +17,6 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.reto.trafikapp.BBDD.CamarasFavoritosBBDD;
 import com.reto.trafikapp.model.Camara;
 
-import java.io.Serializable;
 import java.util.Objects;
 
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
@@ -46,9 +44,8 @@ public class CamaraActionsBottomSheet {
         BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(context);
         View bottomSheetView = LayoutInflater.from(context).inflate(R.layout.camara_actions_bottom_sheet, null);
 
-        View layoutAddFavorite = bottomSheetView.findViewById(R.id.layoutAddFavorito);
-        TextView txtAddFavorite = bottomSheetView.findViewById(R.id.txtAddFavorite);
-        ImageView imgAddFavorite = bottomSheetView.findViewById(R.id.imgFav);
+        Button buttonFavorito = bottomSheetView.findViewById(R.id.buttonFavorito);
+        ImageView imageViewFav = bottomSheetView.findViewById(R.id.imageViewFav);
         imageViewCamara = bottomSheetView.findViewById(R.id.imageViewCamara);
         nombreCamara = bottomSheetView.findViewById(R.id.textViewCamara);
         nombreCarretera = bottomSheetView.findViewById(R.id.textViewCarretera);
@@ -66,11 +63,11 @@ public class CamaraActionsBottomSheet {
         ubicacion.setText(!Objects.equals(camara.getAddress(), "null") ? camara.getAddress() : context.getString(R.string.activity_camara_noDisponible));
 
         if (camarasFavoritosBBDD.esFavorito(camara.getCameraId())) {
-            txtAddFavorite.setText(R.string.camara_actions_bottom_sheet_eliminarFavorito);
-            imgAddFavorite.setImageResource(R.drawable.fav_seleccionado);
+            buttonFavorito.setText(R.string.camara_actions_bottom_sheet_eliminarFavorito);
+            imageViewFav.setImageResource(R.drawable.fav_seleccionado);
         }
 
-        layoutAddFavorite.setOnClickListener(v -> {
+        buttonFavorito.setOnClickListener(v -> {
             camarasFavoritosBBDD.alternarFavorito(camara);
             AppConfig.vibrar(context, 100);
             Toast.makeText(context, R.string.activity_main_toast_favoritoAlterado, Toast.LENGTH_SHORT).show();

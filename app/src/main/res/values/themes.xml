@@ -5,6 +5,7 @@
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
         <item name="colorSurface">@color/white</item>
         <item name="colorOnSurface">@color/black</item>
+        <item name="colorPrimary">@color/black</item>
     </style>
 
     <style name="Theme.TrafikApp" parent="Base.Theme.TrafikApp" />

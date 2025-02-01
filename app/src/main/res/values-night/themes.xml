@@ -5,5 +5,6 @@
         <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
         <item name="colorSurface">@color/fondo_oscuro</item>
         <item name="colorOnSurface">@color/white</item>
+        <item name="colorPrimary">@color/white</item>
     </style>
 </resources>
