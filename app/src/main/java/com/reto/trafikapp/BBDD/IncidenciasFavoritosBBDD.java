@@ -26,9 +26,7 @@ public class IncidenciasFavoritosBBDD extends SQLiteOpenHelper {
     private static final String LONGITUD = "longitude";
 
     private static final String CREATE_TABLE = "create table "
-            + TABLE_NAME + "(" + ID + " TEXT PRIMARY KEY, "
-            + TIPO + " TEXT NOT NULL, " + CAUSA + " TEXT NOT NULL,"
-            + LATITUD + " DOUBLE NOT NULL," + LONGITUD + " DOUBLE NOT NULL);";
+            + TABLE_NAME + "(" + ID + " TEXT PRIMARY KEY);";
 
     private final Context context;
 
@@ -84,7 +82,7 @@ public class IncidenciasFavoritosBBDD extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(incidencia.getIncidenceId())});
 
         if (cursor.getCount() == 0) {
-            db.execSQL("INSERT INTO " + TABLE_NAME + " (" + ID + ", " + TIPO + ", " + CAUSA + ", " + LATITUD + ", " + LONGITUD + ") VALUES ('" + incidencia.getIncidenceId() + "', '" + incidencia.getIncidenceType() + "', '" + incidencia.getCause() + "', '" + incidencia.getLatitude() + "', '" + incidencia.getLongitude() + "')");
+            db.execSQL("INSERT INTO " + TABLE_NAME + " (" + ID + ") VALUES ('" + incidencia.getIncidenceId() + "')");
         }else{
             db.execSQL("DELETE FROM " + TABLE_NAME + " WHERE " + ID + " = '" + incidencia.getIncidenceId() + "'");
         }

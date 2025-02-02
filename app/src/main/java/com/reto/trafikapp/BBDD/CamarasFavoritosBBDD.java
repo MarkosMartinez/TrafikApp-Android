@@ -23,9 +23,7 @@ public class CamarasFavoritosBBDD extends SQLiteOpenHelper {
     private static final String LONGITUD = "longitude";
 
     private static final String CREATE_TABLE = "create table "
-            + TABLE_NAME + "(" + ID + " TEXT PRIMARY KEY, "
-            + NOMBRE + " TEXT NOT NULL, " + URLIMG + " TEXT NOT NULL,"
-            + LATITUD + " DOUBLE NOT NULL," + LONGITUD + " DOUBLE NOT NULL);";
+            + TABLE_NAME + "(" + ID + " TEXT PRIMARY KEY);";
 
     private final Context context;
 
@@ -81,7 +79,7 @@ public class CamarasFavoritosBBDD extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(camara.getCameraId())});
 
         if (cursor.getCount() == 0) {
-            db.execSQL("INSERT INTO " + TABLE_NAME + " (" + ID + ", " + NOMBRE + ", " + URLIMG + ", " + LATITUD + ", " + LONGITUD + ") VALUES ('" + camara.getCameraId() + "', '" + camara.getCameraName() + "', '" + camara.getUrlImage() + "', '" + camara.getLatitude() + "', '" + camara.getLongitude() + "')");
+            db.execSQL("INSERT INTO " + TABLE_NAME + " (" + ID + ") VALUES ('" + camara.getCameraId() + "')");
         }else{
             db.execSQL("DELETE FROM " + TABLE_NAME + " WHERE " + ID + " = '" + camara.getCameraId() + "'");
         }

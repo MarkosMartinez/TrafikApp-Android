@@ -6,9 +6,9 @@ import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -32,7 +32,7 @@ public class CamaraActionsBottomSheet {
     private ImageView imageViewCamara;
     private TextView nombreCamara;
     private TextView nombreCarretera;
-    private TextView ubicacion;
+    private TextView ubicacionCarretera;
 
     public CamaraActionsBottomSheet(Context context, CamarasFavoritosBBDD camarasFavoritosBBDD, Marker marker) {
         this.context = context;
@@ -45,11 +45,11 @@ public class CamaraActionsBottomSheet {
         View bottomSheetView = LayoutInflater.from(context).inflate(R.layout.camara_actions_bottom_sheet, null);
 
         Button buttonFavorito = bottomSheetView.findViewById(R.id.buttonFavorito);
-        ImageView imageViewFav = bottomSheetView.findViewById(R.id.imageViewFav);
+        ImageButton imageButtonFav = bottomSheetView.findViewById(R.id.imageButtonFav);
         imageViewCamara = bottomSheetView.findViewById(R.id.imageViewCamara);
         nombreCamara = bottomSheetView.findViewById(R.id.textViewCamara);
         nombreCarretera = bottomSheetView.findViewById(R.id.textViewCarretera);
-        ubicacion = bottomSheetView.findViewById(R.id.textViewUbicacion);
+        ubicacionCarretera = bottomSheetView.findViewById(R.id.textViewUbicacion);
 
             Glide.with(context)
                     .load(camara.getUrlImage())
@@ -60,23 +60,37 @@ public class CamaraActionsBottomSheet {
 
         nombreCamara.setText(!Objects.equals(camara.getCameraName(), "null") ? camara.getCameraName() : context.getString(R.string.activity_camara_noDisponible));
         nombreCarretera.setText(!Objects.equals(camara.getRoad(), "null") ? camara.getRoad() : context.getString(R.string.activity_camara_noDisponible));
-        ubicacion.setText(!Objects.equals(camara.getAddress(), "null") ? camara.getAddress() : context.getString(R.string.activity_camara_noDisponible));
+        ubicacionCarretera.setText(!Objects.equals(camara.getAddress(), "null") ? camara.getAddress() : context.getString(R.string.activity_camara_noDisponible));
 
         if (camarasFavoritosBBDD.esFavorito(camara.getCameraId())) {
             buttonFavorito.setText(R.string.camara_actions_bottom_sheet_eliminarFavorito);
-            imageViewFav.setImageResource(R.drawable.fav_seleccionado);
+            imageButtonFav.setImageResource(R.drawable.fav_seleccionado);
         }
 
         buttonFavorito.setOnClickListener(v -> {
             camarasFavoritosBBDD.alternarFavorito(camara);
             AppConfig.vibrar(context, 100);
-            Toast.makeText(context, R.string.activity_main_toast_favoritoAlterado, Toast.LENGTH_SHORT).show();
             int marcadorCamaraIcono = camarasFavoritosBBDD.esFavorito(camara.getCameraId()) ? R.drawable.marcador_camara_fav : R.drawable.marcador_camara;
             int widthCamaraIncidencia = marcadorCamaraIcono == R.drawable.marcador_camara_fav ? widthMarcadorFav : widthMarcador;
             int heightCamaraIncidencia = marcadorCamaraIcono == R.drawable.marcador_camara_fav ? heightMarcadorFav : heightMarcador;
             marker.setIcon(BitmapDescriptorFactory.fromBitmap(Bitmap.createScaledBitmap(BitmapFactory.decodeResource(context.getResources(), marcadorCamaraIcono), widthCamaraIncidencia, heightCamaraIncidencia, false)));
             marker.showInfoWindow();
-            bottomSheetDialog.dismiss();
+            buttonFavorito.setText(camarasFavoritosBBDD.esFavorito(camara.getCameraId()) ? R.string.camara_actions_bottom_sheet_eliminarFavorito : R.string.camara_actions_bottom_sheet_añadirFavorito);
+            imageButtonFav.setImageResource(camarasFavoritosBBDD.esFavorito(camara.getCameraId()) ? R.drawable.fav_seleccionado : R.drawable.fav_sinseleccionar);
+
+        });
+
+        imageButtonFav.setOnClickListener(v -> {
+            camarasFavoritosBBDD.alternarFavorito(camara);
+            AppConfig.vibrar(context, 100);
+            int marcadorCamaraIcono = camarasFavoritosBBDD.esFavorito(camara.getCameraId()) ? R.drawable.marcador_camara_fav : R.drawable.marcador_camara;
+            int widthCamaraIncidencia = marcadorCamaraIcono == R.drawable.marcador_camara_fav ? widthMarcadorFav : widthMarcador;
+            int heightCamaraIncidencia = marcadorCamaraIcono == R.drawable.marcador_camara_fav ? heightMarcadorFav : heightMarcador;
+            marker.setIcon(BitmapDescriptorFactory.fromBitmap(Bitmap.createScaledBitmap(BitmapFactory.decodeResource(context.getResources(), marcadorCamaraIcono), widthCamaraIncidencia, heightCamaraIncidencia, false)));
+            marker.showInfoWindow();
+            imageButtonFav.setImageResource(camarasFavoritosBBDD.esFavorito(camara.getCameraId()) ? R.drawable.fav_seleccionado : R.drawable.fav_sinseleccionar);
+            buttonFavorito.setText(camarasFavoritosBBDD.esFavorito(camara.getCameraId()) ? R.string.camara_actions_bottom_sheet_eliminarFavorito : R.string.camara_actions_bottom_sheet_añadirFavorito);
+
         });
 
         bottomSheetDialog.setContentView(bottomSheetView);

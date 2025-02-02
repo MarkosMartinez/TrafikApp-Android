@@ -12,7 +12,6 @@
     <string name="activity_main_toast_logout">Sesion cerrada</string>
     <string name="activity_main_toast_error_incidencias">Error al obtener las incidencias</string>
     <string name="activity_main_toast_error_camaras">Error al obtener las camaras</string>
-    <string name="activity_main_toast_favoritoAlterado">Lista de favoritos modificada!</string>
     <string name="activity_main_toast_actualizandoMapa">Actualizando mapa...</string>
     <string name="activity_main_alert_dialog_errorTitulo">¡Error al cargar los datos!</string>
     <string name="activity_main_alert_dialog_errorCarga">¡Comprueba tu conexion y reinicia la aplicacion!</string>

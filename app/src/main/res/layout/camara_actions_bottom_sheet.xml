@@ -25,13 +25,14 @@
             android:layout_height="0dp"
             android:layout_weight="1" />
 
-        <ImageView
-            android:id="@+id/imageViewFav"
+        <ImageButton
+            android:id="@+id/imageButtonFav"
             android:layout_width="27dp"
             android:layout_height="25dp"
             android:layout_weight="0"
             android:scaleType="fitXY"
-            app:srcCompat="@drawable/fav_sinseleccionar" />
+            app:srcCompat="@drawable/fav_sinseleccionar"
+            android:background="?attr/selectableItemBackgroundBorderless" />
     </LinearLayout>
 
     <ImageView

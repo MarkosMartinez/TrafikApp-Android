@@ -56,6 +56,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private List<Marker> marcadores = new ArrayList<>();
     private GoogleMap mMap;
     private ImageButton imageButtonFiltro;
+    private ImageButton imageButtonLogout;
     private CheckBox checkBoxCamaras;
     private CheckBox checkBoxIncidencias;
     private CheckBox checkBoxFavoritos;
@@ -68,6 +69,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         gif_loading = findViewById(R.id.gif_loading);
         gif_loading.setVisibility(pl.droidsonroids.gif.GifImageView.VISIBLE);
         imageButtonFiltro = findViewById(R.id.imageButtonFiltro);
+        imageButtonLogout = findViewById(R.id.imageButtonLogout);
         mapView = findViewById(R.id.mapView);
         Bundle mapViewBundle = null;
         if (savedInstanceState != null) {
@@ -77,14 +79,17 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mapView.onCreate(mapViewBundle);
         mapView.getMapAsync(this);
 
-        ImageButton imgBtnLogout = findViewById(R.id.imageButtonLogout);
+        int modoOscuroFlags = getResources().getConfiguration().uiMode & android.content.res.Configuration.UI_MODE_NIGHT_MASK;
+        if (modoOscuroFlags == android.content.res.Configuration.UI_MODE_NIGHT_YES) {
+            imageButtonLogout.setImageResource(R.drawable.logout_blanco);
+            imageButtonFiltro.setImageResource(R.drawable.filter_blanco);
+        }
 
         //Obtener las incidencias
         llamadasAPI.getIncidencias(new LlamadasAPI.IncidenciasCallback() {
             @Override
             public void onSuccess(List<Incidencia> incidencias) {
                 MainActivity.this.incidencias = incidencias;
-                Log.d("MainActivity", "Incidencias: " + incidencias);
                 addIncidencias();
                 ocultarCarga();
 
@@ -106,7 +111,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onSuccess(List<Camara> camaras) {
                 MainActivity.this.camaras = camaras;
-                Log.d("MainActivity", "Camaras: " + camaras);
                 addCamaras();
 
 
@@ -123,7 +127,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
 
-        imgBtnLogout.setOnClickListener(v -> {
+        imageButtonLogout.setOnClickListener(v -> {
             AppConfig.vibrar(MainActivity.this, 200);
             SharedPreferences spConfig = getSharedPreferences("config", MODE_PRIVATE);
             SharedPreferences.Editor editorConfig = spConfig.edit();
@@ -147,7 +151,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             finish();
         });
 
-        imgBtnLogout.setOnLongClickListener(v -> {
+        imageButtonLogout.setOnLongClickListener(v -> {
             AppConfig.vibrar(MainActivity.this, 100);
             Toast.makeText(MainActivity.this, R.string.activity_main_toast_actualizandoMapa, Toast.LENGTH_SHORT).show();
             recreate();
@@ -481,7 +485,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                                 Incidencia incidencia = (Incidencia) tag;
                                 incidenciasFavoritosBBDD.alternarFavorito(incidencia);
                                 AppConfig.vibrar(MainActivity.this, 100);
-                                Toast.makeText(getApplicationContext(), R.string.activity_main_toast_favoritoAlterado, Toast.LENGTH_SHORT).show();
                                 int marcadorIncidenciaIcono = incidenciasFavoritosBBDD.esFavorito(incidencia.getIncidenceId()) ? R.drawable.marcador_incidencia_fav : R.drawable.marcador_incidencia;
                                 int widthMarcadorIncidencia = marcadorIncidenciaIcono == R.drawable.marcador_incidencia_fav ? widthMarcadorFav : widthMarcador;
                                 int heightMarcadorIncidencia = marcadorIncidenciaIcono == R.drawable.marcador_incidencia_fav ? heightMarcadorFav : heightMarcador;
