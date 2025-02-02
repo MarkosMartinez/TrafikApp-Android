@@ -41,6 +41,7 @@ dependencies {
     implementation(libs.android.gif.drawable)
     implementation(libs.glide)
     implementation(libs.glide.transformations)
+    implementation(libs.work.runtime)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)

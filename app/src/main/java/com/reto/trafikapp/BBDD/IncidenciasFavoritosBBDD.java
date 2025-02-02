@@ -9,8 +9,10 @@ import android.util.Log;
 import com.reto.trafikapp.model.Incidencia;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 public class IncidenciasFavoritosBBDD extends SQLiteOpenHelper {
 
@@ -99,6 +101,20 @@ public class IncidenciasFavoritosBBDD extends SQLiteOpenHelper {
         cursor.close();
         db.close();
         return esFavorito;
+    }
+
+    public Set<String> obtenerFavoritosActuales() {
+        Set<String> favoritos = new HashSet<>();
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT incidenceId FROM " + IncidenciasFavoritosBBDD.TABLE_NAME, null);
+
+        while (cursor.moveToNext()) {
+            favoritos.add(cursor.getString(0));
+        }
+
+        cursor.close();
+        db.close();
+        return favoritos;
     }
 
     public void vaciar(){

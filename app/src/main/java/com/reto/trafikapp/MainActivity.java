@@ -16,7 +16,16 @@ import android.widget.PopupWindow;
 import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.work.BackoffPolicy;
+import androidx.work.Constraints;
+import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.NetworkType;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
+
 import pl.droidsonroids.gif.GifImageView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -34,6 +43,7 @@ import com.reto.trafikapp.BBDD.IncidenciasFavoritosBBDD;
 import com.reto.trafikapp.adapter.MarcadorAdapter;
 import com.reto.trafikapp.model.Camara;
 import com.reto.trafikapp.model.Incidencia;
+import com.reto.trafikapp.worker.IncidenciasWorker;
 
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
@@ -75,6 +85,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (savedInstanceState != null) {
             mapViewBundle = savedInstanceState.getBundle(MAPVIEW_BUNDLE_KEY);
         }
+
+        configurarWorker();
 
         mapView.onCreate(mapViewBundle);
         mapView.getMapAsync(this);
@@ -204,6 +216,38 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         });
 
+    }
+
+    private void configurarWorker() {
+        Constraints constraints = new Constraints.Builder()
+                .setRequiredNetworkType(NetworkType.CONNECTED)
+                .setRequiresBatteryNotLow(false)
+                .setRequiresCharging(false)
+                .setRequiresDeviceIdle(false)
+                .build();
+
+        PeriodicWorkRequest periodicWorkRequest =
+                new PeriodicWorkRequest.Builder(
+                        IncidenciasWorker.class,
+                        15, TimeUnit.MINUTES)
+                        .setConstraints(constraints)
+                        .setBackoffCriteria(
+                                BackoffPolicy.LINEAR,
+                                PeriodicWorkRequest.MIN_BACKOFF_MILLIS,
+                                TimeUnit.MILLISECONDS)
+                        .setInitialDelay(1, TimeUnit.MINUTES)
+                        .build();
+
+        WorkManager workManager = WorkManager.getInstance(this);
+        workManager.cancelAllWork(); // Cancela cualquier trabajo anterior
+
+        workManager.enqueueUniquePeriodicWork(
+                "checkIncidencias",
+                ExistingPeriodicWorkPolicy.REPLACE,
+                periodicWorkRequest);
+
+        WorkManager.getInstance(this)
+                .enqueueUniquePeriodicWork("checkIncidencias", ExistingPeriodicWorkPolicy.REPLACE, periodicWorkRequest);
     }
 
     private void cargarFiltros(){

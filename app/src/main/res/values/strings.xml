@@ -28,4 +28,9 @@
     <string name="popup_filtro_incidencias">Incidencias</string>
     <string name="popup_filtro_favoritos">Favoritos</string>
 
+    <plurals name="incidencia_resuelta">
+        <item quantity="one">%d incidencia favorita ha sido resuelta</item>
+        <item quantity="other">%d incidencias favoritas han sido resueltas</item>
+    </plurals>
+
 </resources>
