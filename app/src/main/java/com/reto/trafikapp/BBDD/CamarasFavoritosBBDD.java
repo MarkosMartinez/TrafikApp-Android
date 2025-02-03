@@ -12,15 +12,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CamarasFavoritosBBDD extends SQLiteOpenHelper {
-    private static final String BD_NAME = "camaras.db";
+    private static final String BD_NAME = "camaras_fav.db";
     private static final int DB_VERSION = 1;
-    public static final String TABLE_NAME = "Camara";
+    public static final String TABLE_NAME = "CamarasFav";
 
     private static final String ID = "camaraId";
-    private static final String NOMBRE = "cameraName";
-    private static final String URLIMG = "urlImage";
-    private static final String LATITUD = "latitude";
-    private static final String LONGITUD = "longitude";
 
     private static final String CREATE_TABLE = "create table "
             + TABLE_NAME + "(" + ID + " TEXT PRIMARY KEY);";

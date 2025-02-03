@@ -33,6 +33,10 @@ public class Incidencia {
         this.creada = creada;
     }
 
+    public Incidencia() {
+
+    }
+
     public String getIncidenceId() {
         return incidenceId;
     }

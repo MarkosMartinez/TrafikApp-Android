@@ -235,7 +235,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                                 BackoffPolicy.LINEAR,
                                 PeriodicWorkRequest.MIN_BACKOFF_MILLIS,
                                 TimeUnit.MILLISECONDS)
-                        .setInitialDelay(1, TimeUnit.MINUTES)
+                        .setInitialDelay(10, TimeUnit.SECONDS)
                         .build();
 
         WorkManager workManager = WorkManager.getInstance(this);

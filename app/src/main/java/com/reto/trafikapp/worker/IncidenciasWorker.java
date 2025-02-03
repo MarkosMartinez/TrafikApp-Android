@@ -16,6 +16,7 @@ import androidx.work.ForegroundInfo;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
+import com.reto.trafikapp.BBDD.IncidenciasBBDD;
 import com.reto.trafikapp.LlamadasAPI;
 import com.reto.trafikapp.MainActivity;
 import com.reto.trafikapp.R;
@@ -27,17 +28,20 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 public class IncidenciasWorker extends Worker {
     private static final String CHANNEL_ID = "TRAFIKAPP";
     private final Context context;
     private final IncidenciasFavoritosBBDD incidenciasFavoritosBBDD;
+    private final IncidenciasBBDD incidenciasBBDD;
     private final LlamadasAPI llamadasAPI;
 
     public IncidenciasWorker(@NonNull Context context, @NonNull WorkerParameters params) {
         super(context, params);
         this.context = context;
         this.incidenciasFavoritosBBDD = new IncidenciasFavoritosBBDD(context);
+        this.incidenciasBBDD = new IncidenciasBBDD(context);
         this.llamadasAPI = new LlamadasAPI();
     }
 
@@ -48,9 +52,6 @@ public class IncidenciasWorker extends Worker {
         createNotificationChannel();
 
         Set<String> favoritosActuales = incidenciasFavoritosBBDD.obtenerFavoritosActuales();
-        if (favoritosActuales.isEmpty()) {
-            return Result.success();
-        }
 
         final CountDownLatch latch = new CountDownLatch(1);
         final Set<String> incidenciasEliminadas = new HashSet<>(favoritosActuales);
@@ -58,6 +59,8 @@ public class IncidenciasWorker extends Worker {
         llamadasAPI.getIncidencias(new LlamadasAPI.IncidenciasCallback() {
             @Override
             public void onSuccess(List<Incidencia> incidencias) {
+                nuevasIncidencias(incidencias);
+                Log.d("IncidenciasWorker", "Incidencias obtenidas");
                 for (Incidencia incidencia : incidencias) {
                     incidenciasEliminadas.remove(incidencia.getIncidenceId());
                 }
@@ -94,14 +97,27 @@ public class IncidenciasWorker extends Worker {
         return Result.success();
     }
 
+    private void nuevasIncidencias(List<Incidencia> incidencias) {
+        Set<String>  incidenciasActuales = incidenciasBBDD.obtenerIncidencias();
+        if(!incidenciasActuales.equals(incidencias.stream().map(Incidencia::getIncidenceId).collect(Collectors.toSet()))) {
+            Log.d("IncidenciasWorker", "Diferentes!");
+            incidenciasBBDD.vaciar();
+            SQLiteDatabase db = incidenciasBBDD.getWritableDatabase();
+            for (Incidencia incidencia : incidencias) {
+                db.execSQL("INSERT INTO " + IncidenciasBBDD.TABLE_NAME + " VALUES ('" + incidencia.getIncidenceId() + "')");
+            }
+            showNotification(context.getResources().getString(R.string.notificaciones_nuevasIncidencias), context.getResources().getString(R.string.notificaciones_pulsaMasInfo));
+        }
+    }
+
     private void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(
                     CHANNEL_ID,
-                    "TrafikApp Notificaciones",
+                    "Notificaciones de incidencias",
                     NotificationManager.IMPORTANCE_DEFAULT
             );
-            channel.setDescription("Canal para notificaciones de incidencias resueltas");
+            channel.setDescription("Canal para notificaciones de incidencias nuevas o resueltas");
 
             NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);

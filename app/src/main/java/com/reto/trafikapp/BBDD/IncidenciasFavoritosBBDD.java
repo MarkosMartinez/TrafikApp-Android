@@ -16,16 +16,11 @@ import java.util.Set;
 
 public class IncidenciasFavoritosBBDD extends SQLiteOpenHelper {
 
-    private ArrayList<Incidencia> incidencias;
-    private static final String BD_NAME = "incidencias.db";
+    private static final String BD_NAME = "incidencias_fav.db";
     private static final int DB_VERSION = 1;
-    public static final String TABLE_NAME = "Incidencia";
+    public static final String TABLE_NAME = "IncidenciaFav";
 
     private static final String ID = "incidenceId";
-    private static final String TIPO = "incidenceType";
-    private static final String CAUSA = "cause";
-    private static final String LATITUD = "latitude";
-    private static final String LONGITUD = "longitude";
 
     private static final String CREATE_TABLE = "create table "
             + TABLE_NAME + "(" + ID + " TEXT PRIMARY KEY);";
