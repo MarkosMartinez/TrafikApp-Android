@@ -26,12 +26,15 @@
     <string name="popup_filtro_camaras">Kamerak</string>
     <string name="popup_filtro_incidencias">Inzidenteak</string>
     <string name="popup_filtro_favoritos">Gogokoak</string>
+    <string name="activity_configuracion_textView_titulo">Konfigurazioa</string>
     <string name="activity_configuracion_textView_tituloNotificaciones">Jakinarazpenak</string>
     <string name="activity_configuracion_checkBox_IncidenciasFavoritas">Gogoko inzidenteak</string>
     <string name="activity_configuracion_checkBox_IncidenciasNuevas">Inzidente berriak</string>
     <string name="activity_configuracion_textView_tituloIdioma">Aplikazioaren hizkuntza</string>
     <string name="activity_configuracion_toast_actualizado">Ezarpenak ongi eguneratu dira!</string>
     <string name="activity_configuracion_button_aplicarConfig">Aplikatu ezarpenak</string>
+    <string name="activity_configuracion_toast_sinPermisoNotificaciones">Jakinarazpenak jasotzeko baimenak ez dira eman!</string>
+    <string name="activity_configuracion_toast_permisoNotificaciones">Jakinarazpenak jasotzeko baimenak eman dira</string>
 
     <string name="notificaciones_nuevasIncidencias">Inzidente berriak aurkitu dira!</string>
     <string name="notificaciones_pulsaMasInfo">Sakatu xehetasun gehiago ikusteko</string>

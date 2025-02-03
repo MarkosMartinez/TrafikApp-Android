@@ -9,9 +9,8 @@
         android:id="@+id/checkBoxIncidenciasFavoritas"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="121dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="121dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="5dp"
         android:text="@string/activity_configuracion_checkBox_IncidenciasFavoritas"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -21,9 +20,6 @@
         android:id="@+id/checkBoxIncidenciasNuevas"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="127dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="127dp"
         android:text="@string/activity_configuracion_checkBox_IncidenciasNuevas"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -34,13 +30,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="159dp"
-        android:layout_marginTop="250dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="160dp"
         android:text="@string/activity_configuracion_textView_tituloNotificaciones"
+        android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/textViewTituloConfiguracion" />
 
     <Button
         android:id="@+id/buttonAplicarConfig"
@@ -63,6 +60,7 @@
         android:layout_marginTop="30dp"
         android:layout_marginEnd="133dp"
         android:text="@string/activity_configuracion_textView_tituloIdioma"
+        android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -73,10 +71,24 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="146dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="10dp"
         android:layout_marginEnd="147dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewTituloIdioma" />
+
+    <TextView
+        android:id="@+id/textViewTituloConfiguracion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="176dp"
+        android:layout_marginTop="225dp"
+        android:layout_marginEnd="177dp"
+        android:text="@string/activity_configuracion_textView_titulo"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

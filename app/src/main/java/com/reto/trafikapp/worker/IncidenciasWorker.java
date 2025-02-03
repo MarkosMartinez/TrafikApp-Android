@@ -5,14 +5,13 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ServiceInfo;
+import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
-import androidx.work.ForegroundInfo;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
@@ -48,10 +47,11 @@ public class IncidenciasWorker extends Worker {
     @NonNull
     @Override
     public Result doWork() {
-        Log.d("IncidenciasWorker", "Comprobando incidencias favoritas eliminadas");
         createNotificationChannel();
 
         Set<String> favoritosActuales = incidenciasFavoritosBBDD.obtenerFavoritosActuales();
+        SharedPreferences sharedPreferences = context.getSharedPreferences("config", Context.MODE_PRIVATE);
+        if(sharedPreferences.getBoolean("incidenciasFavoritas", false)) Log.d("IncidenciasWorker", "Comprobando incidencias favoritas eliminadas");
 
         final CountDownLatch latch = new CountDownLatch(1);
         final Set<String> incidenciasEliminadas = new HashSet<>(favoritosActuales);
@@ -59,14 +59,13 @@ public class IncidenciasWorker extends Worker {
         llamadasAPI.getIncidencias(new LlamadasAPI.IncidenciasCallback() {
             @Override
             public void onSuccess(List<Incidencia> incidencias) {
-                nuevasIncidencias(incidencias);
+                nuevasIncidencias(incidencias, sharedPreferences);
                 Log.d("IncidenciasWorker", "Incidencias obtenidas");
                 for (Incidencia incidencia : incidencias) {
                     incidenciasEliminadas.remove(incidencia.getIncidenceId());
                 }
 
                 if (!incidenciasEliminadas.isEmpty()) {
-                    // Eliminar las incidencias que ya no existen de la base de datos
                     SQLiteDatabase db = incidenciasFavoritosBBDD.getWritableDatabase();
                     for (String idEliminada : incidenciasEliminadas) {
                         db.execSQL("DELETE FROM " + IncidenciasFavoritosBBDD.TABLE_NAME +
@@ -74,8 +73,7 @@ public class IncidenciasWorker extends Worker {
                     }
                     db.close();
 
-                    // Mostrar notificación
-                    showNotification("Incidencias resueltas", context.getResources().getQuantityString(R.plurals.incidencia_resuelta, incidenciasEliminadas.size(), incidenciasEliminadas.size()));
+                    if(sharedPreferences.getBoolean("incidenciasFavoritas", false)) showNotification("Incidencias resueltas", context.getResources().getQuantityString(R.plurals.incidencia_resuelta, incidenciasEliminadas.size(), incidenciasEliminadas.size()));
                 }
 
                 latch.countDown();
@@ -97,17 +95,22 @@ public class IncidenciasWorker extends Worker {
         return Result.success();
     }
 
-    private void nuevasIncidencias(List<Incidencia> incidencias) {
-        Set<String>  incidenciasActuales = incidenciasBBDD.obtenerIncidencias();
-        if(!incidenciasActuales.equals(incidencias.stream().map(Incidencia::getIncidenceId).collect(Collectors.toSet()))) {
-            Log.d("IncidenciasWorker", "Nuevas incidencias encontradas!");
+    private void nuevasIncidencias(List<Incidencia> incidencias, SharedPreferences sharedPreferences) {
+        if(!sharedPreferences.getBoolean("incidenciasNuevas", false)){
             incidenciasBBDD.vaciar();
-            SQLiteDatabase db = incidenciasBBDD.getWritableDatabase();
-            for (Incidencia incidencia : incidencias) {
-                db.execSQL("INSERT INTO " + IncidenciasBBDD.TABLE_NAME + " VALUES ('" + incidencia.getIncidenceId() + "')");
-            }
+            incidenciasBBDD.rellenar(incidencias);
+            return;
+        }
+        Log.d("IncidenciasWorker", "Comprobando nuevas incidencias");
+        Set<String> incidenciasActuales = incidenciasBBDD.obtenerIncidencias();
+        Set<String> incidenciaIds = incidencias.stream().map(Incidencia::getIncidenceId).collect(Collectors.toSet());
+
+        if (!incidenciasActuales.isEmpty() && !incidenciasActuales.containsAll(incidenciaIds)) {
+            Log.d("IncidenciasWorker", "Nuevas incidencias encontradas!");
             showNotification(context.getResources().getString(R.string.notificaciones_nuevasIncidencias), context.getResources().getString(R.string.notificaciones_pulsaMasInfo));
         }
+        incidenciasBBDD.vaciar();
+        incidenciasBBDD.rellenar(incidencias);
     }
 
     private void createNotificationChannel() {

@@ -27,12 +27,15 @@
     <string name="popup_filtro_camaras">Cámaras</string>
     <string name="popup_filtro_incidencias">Incidencias</string>
     <string name="popup_filtro_favoritos">Favoritos</string>
+    <string name="activity_configuracion_textView_titulo">Configuración</string>
     <string name="activity_configuracion_textView_tituloNotificaciones">Notificaciones</string>
     <string name="activity_configuracion_checkBox_IncidenciasFavoritas">Incidencias Favoritas</string>
     <string name="activity_configuracion_checkBox_IncidenciasNuevas">Nuevas Incidencias</string>
     <string name="activity_configuracion_textView_tituloIdioma">Idioma de la aplicación</string>
     <string name="activity_configuracion_toast_actualizado">¡Configuracion actualizada correctamente!</string>
     <string name="activity_configuracion_button_aplicarConfig">Aplicar Configuracion</string>
+    <string name="activity_configuracion_toast_sinPermisoNotificaciones">¡No se han concedido permisos para recibir notificaciones!</string>
+    <string name="activity_configuracion_toast_permisoNotificaciones">Se han concedido permisos para recibir notificaciones</string>
 
     <string name="notificaciones_nuevasIncidencias">¡Nuevas incidencias encontradas!</string>
     <string name="notificaciones_pulsaMasInfo">Pulsa para ver mas detalles</string>

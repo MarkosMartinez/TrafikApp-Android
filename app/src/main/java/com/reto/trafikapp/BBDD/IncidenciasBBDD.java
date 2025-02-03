@@ -7,7 +7,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import com.reto.trafikapp.model.Incidencia;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -59,6 +58,14 @@ public class IncidenciasBBDD extends SQLiteOpenHelper {
     public void vaciar(){
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("DELETE FROM " + TABLE_NAME);
+        db.close();
+    }
+
+    public void rellenar(List<Incidencia> incidencias) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        for (Incidencia incidencia : incidencias) {
+            db.execSQL("INSERT INTO " + TABLE_NAME + " VALUES ('" + incidencia.getIncidenceId() + "')");
+        }
         db.close();
     }
 }

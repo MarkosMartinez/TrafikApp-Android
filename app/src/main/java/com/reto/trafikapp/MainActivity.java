@@ -43,8 +43,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.reto.trafikapp.BBDD.CamarasFavoritosBBDD;
 import com.reto.trafikapp.BBDD.IncidenciasFavoritosBBDD;
 import com.reto.trafikapp.adapter.MarcadorAdapter;
-import com.reto.trafikapp.configuracion.AppConfig;
-import com.reto.trafikapp.configuracion.ConfigActivity;
+import com.reto.trafikapp.configuration.AppConfig;
+import com.reto.trafikapp.configuration.ConfigActivity;
 import com.reto.trafikapp.model.Camara;
 import com.reto.trafikapp.model.Incidencia;
 import com.reto.trafikapp.worker.IncidenciasWorker;
@@ -80,29 +80,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private void actualizarIdioma(){
         SharedPreferences spConfig = getSharedPreferences("config", MODE_PRIVATE);
-        Log.d("MainActivity", "Idioma: " + spConfig.getString("idioma", "Español"));
-        Locale locale;
-        switch (spConfig.getString("idioma", "Español")) {
-            case "English":
-            case "Inglés":
-            case "Ingelesa":
-                locale = new Locale("en");
-                break;
-            case "Basque":
-            case "Vasco":
-            case "Euskera":
-                locale = new Locale("eu");
-                break;
-            case "Spanish":
-            case "Español":
-            case "Gaztelania":
-                locale = new Locale("es");
-                break;
-            default:
-                locale = new Locale("es");
-                break;
-        }
-        AppConfig.vibrar(this, 100);
+        Locale locale = new Locale(spConfig.getString("idioma", "es"));
 
         Locale.setDefault(locale);
         Resources resources = getResources();
@@ -114,6 +92,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        actualizarIdioma(); // Llamarlo antes del setContentView
         setContentView(R.layout.activity_main); // Llamarlo antes de los findViewById
 
         gif_loading = findViewById(R.id.gif_loading);
@@ -126,8 +105,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (savedInstanceState != null) {
             mapViewBundle = savedInstanceState.getBundle(MAPVIEW_BUNDLE_KEY);
         }
-
-        actualizarIdioma();
 
         configurarWorker();
 
@@ -149,7 +126,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 addIncidencias();
                 ocultarCarga();
 
-                //Comprobar las incidencias favoritas
                 incidenciasFavoritosBBDD.comprobarIncidencias(incidencias);
             }
 
@@ -297,7 +273,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         .build();
 
         WorkManager workManager = WorkManager.getInstance(this);
-        workManager.cancelAllWork(); // Cancela cualquier trabajo anterior
+        workManager.cancelAllWork();
 
         workManager.enqueueUniquePeriodicWork(
                 "checkIncidencias",

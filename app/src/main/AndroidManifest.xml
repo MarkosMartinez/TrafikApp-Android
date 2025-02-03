@@ -39,7 +39,7 @@
             android:name=".MainActivity"
             android:exported="true" />
         <activity
-            android:name=".configuracion.ConfigActivity"
+            android:name=".configuration.ConfigActivity"
             android:exported="true" />
     </application>
 

@@ -26,12 +26,15 @@
 <string name="popup_filtro_camaras">Cameras</string>
 <string name="popup_filtro_incidencias">Incidents</string>
 <string name="popup_filtro_favoritos">Favorites</string>
+<string name="activity_configuracion_textView_titulo">Configuration</string>
 <string name="activity_configuracion_textView_tituloNotificaciones">Notifications</string>
 <string name="activity_configuracion_checkBox_IncidenciasFavoritas">Favorite Incidents</string>
 <string name="activity_configuracion_checkBox_IncidenciasNuevas">New Incidents</string>
 <string name="activity_configuracion_textView_tituloIdioma">App Language</string>
 <string name="activity_configuracion_toast_actualizado">Settings updated successfully!</string>
 <string name="activity_configuracion_button_aplicarConfig">Apply Configuration</string>
+    <string name="activity_configuracion_toast_sinPermisoNotificaciones">Notification permissions not granted!</string>
+    <string name="activity_configuracion_toast_permisoNotificaciones">Notification permissions granted</string>
 
 <string name="notificaciones_nuevasIncidencias">New incidents found!</string>
 <string name="notificaciones_pulsaMasInfo">Tap to see more details</string>

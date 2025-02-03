@@ -1,5 +1,6 @@
 package com.reto.trafikapp;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -15,7 +16,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.reto.trafikapp.BBDD.CamarasFavoritosBBDD;
-import com.reto.trafikapp.configuracion.AppConfig;
+import com.reto.trafikapp.configuration.AppConfig;
 import com.reto.trafikapp.model.Camara;
 
 import java.util.Objects;
@@ -41,6 +42,7 @@ public class CamaraActionsBottomSheet {
         this.marker = marker;
     }
 
+    @SuppressLint("SuspiciousIndentation")
     public void ver(Camara camara) {
         BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(context);
         View bottomSheetView = LayoutInflater.from(context).inflate(R.layout.camara_actions_bottom_sheet, null);
