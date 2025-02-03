@@ -100,7 +100,7 @@ public class IncidenciasWorker extends Worker {
     private void nuevasIncidencias(List<Incidencia> incidencias) {
         Set<String>  incidenciasActuales = incidenciasBBDD.obtenerIncidencias();
         if(!incidenciasActuales.equals(incidencias.stream().map(Incidencia::getIncidenceId).collect(Collectors.toSet()))) {
-            Log.d("IncidenciasWorker", "Diferentes!");
+            Log.d("IncidenciasWorker", "Nuevas incidencias encontradas!");
             incidenciasBBDD.vaciar();
             SQLiteDatabase db = incidenciasBBDD.getWritableDatabase();
             for (Incidencia incidencia : incidencias) {

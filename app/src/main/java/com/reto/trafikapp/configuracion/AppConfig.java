@@ -1,4 +1,4 @@
-package com.reto.trafikapp;
+package com.reto.trafikapp.configuracion;
 
 import android.content.Context;
 import android.os.Vibrator;

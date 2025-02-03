@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="activity_login_textView_titulo">Saioa hasi</string>
+    <string name="activity_login_input_email">Posta elektronikoa</string>
+    <string name="activity_login_input_password">Pasahitza</string>
+    <string name="activity_login_button_login">Hasi saioa</string>
+    <string name="activity_login_toast_errorCredenciales">Kredentzialak baliogabeak</string>
+    <string name="activity_main_filtroInfo_camaras">Kamerak</string>
+    <string name="activity_main_filtroInfo_incidencias">Inzidenteak</string>
+    <string name="activity_main_filtroInfo_favoritos">Gogokoak</string>
+    <string name="activity_main_toast_logout">Saioa itxita</string>
+    <string name="activity_main_toast_error_incidencias">Errorea inzidenteak berreskuratzean</string>
+    <string name="activity_main_toast_error_camaras">Errorea kamerak berreskuratzean</string>
+    <string name="activity_main_toast_actualizandoMapa">Mapa eguneratzen...</string>
+    <string name="activity_main_alert_dialog_errorTitulo">Errorea datuak kargatzean!</string>
+    <string name="activity_main_alert_dialog_errorCarga">Egiaztatu zure konexioa eta berrabiarazi aplikazioa!</string>
+    <string name="camara_actions_bottom_sheet_titulo">Kameraren informazioa</string>
+    <string name="camara_actions_bottom_sheet_añadirFavorito">Gehitu gogokoetara</string>
+    <string name="camara_actions_bottom_sheet_eliminarFavorito">Kendu gogokoetatik</string>
+    <string name="camara_actions_bottom_sheet_masInfo">Informazio gehiago</string>
+    <string name="activity_adaptador_marcador_masInfo">Sakatu informazio gehiago ikusteko</string>
+    <string name="activity_camara_noDisponible">Ez dago eskuragarri</string>
+    <string name="activity_camara_textView_nombreCamara">Izena:</string>
+    <string name="activity_camara_textView_nombreCarretera">Errepidea:</string>
+    <string name="activity_camara_textView_ubicacion">Kokapena:</string>
+    <string name="popup_filtro_camaras">Kamerak</string>
+    <string name="popup_filtro_incidencias">Inzidenteak</string>
+    <string name="popup_filtro_favoritos">Gogokoak</string>
+    <string name="activity_configuracion_textView_tituloNotificaciones">Jakinarazpenak</string>
+    <string name="activity_configuracion_checkBox_IncidenciasFavoritas">Gogoko inzidenteak</string>
+    <string name="activity_configuracion_checkBox_IncidenciasNuevas">Inzidente berriak</string>
+    <string name="activity_configuracion_textView_tituloIdioma">Aplikazioaren hizkuntza</string>
+    <string name="activity_configuracion_toast_actualizado">Ezarpenak ongi eguneratu dira!</string>
+    <string name="activity_configuracion_button_aplicarConfig">Aplikatu ezarpenak</string>
+
+    <string name="notificaciones_nuevasIncidencias">Inzidente berriak aurkitu dira!</string>
+    <string name="notificaciones_pulsaMasInfo">Sakatu xehetasun gehiago ikusteko</string>
+    <string name="incidencia_resuelta">Inzidentea konponduta</string>
+
+    <plurals name="incidencia_resuelta">
+        <item quantity="one">%d gogoko inzidente konpondu da</item>
+        <item quantity="other">%d gogoko inzidente konpondu dira</item>
+    </plurals>
+
+    <string-array name="idiomas_array">
+        <item>Gaztelania</item>
+        <item>Ingelesa</item>
+        <item>Euskara</item>
+    </string-array>
+
+</resources>

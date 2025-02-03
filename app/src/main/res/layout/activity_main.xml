@@ -16,10 +16,10 @@
         android:id="@+id/imageButtonLogout"
         android:layout_width="45dp"
         android:layout_height="45dp"
+        android:layout_marginStart="3dp"
         android:layout_marginTop="1dp"
         android:background="@android:color/transparent"
         android:scaleType="fitXY"
-        android:scaleX="-1"
         android:src="@drawable/logout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -46,7 +46,7 @@
         android:layout_marginEnd="3dp"
         android:background="@android:color/transparent"
         android:scaleType="fitXY"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/imageButtonConfig"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/filter" />
 
@@ -150,5 +150,17 @@
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>
+
+    <ImageButton
+        android:id="@+id/imageButtonConfig"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="1dp"
+        android:layout_marginEnd="3dp"
+        android:background="@android:color/transparent"
+        android:scaleType="fitXY"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/config" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

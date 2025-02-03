@@ -2,6 +2,7 @@ package com.reto.trafikapp;
 
 import android.util.Log;
 
+import com.reto.trafikapp.configuracion.AppConfig;
 import com.reto.trafikapp.model.Camara;
 import com.reto.trafikapp.model.Incidencia;
 

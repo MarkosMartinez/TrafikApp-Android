@@ -38,6 +38,9 @@
         <activity
             android:name=".MainActivity"
             android:exported="true" />
+        <activity
+            android:name=".configuracion.ConfigActivity"
+            android:exported="true" />
     </application>
 
 </manifest>

@@ -15,6 +15,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.reto.trafikapp.BBDD.CamarasFavoritosBBDD;
+import com.reto.trafikapp.configuracion.AppConfig;
 import com.reto.trafikapp.model.Camara;
 
 import java.util.Objects;

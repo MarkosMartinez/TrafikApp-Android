@@ -14,6 +14,8 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.reto.trafikapp.configuracion.AppConfig;
+
 public class LoginActivity extends AppCompatActivity {
 
     Button buttonLogin;

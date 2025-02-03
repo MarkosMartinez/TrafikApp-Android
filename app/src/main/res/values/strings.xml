@@ -27,12 +27,26 @@
     <string name="popup_filtro_camaras">Cámaras</string>
     <string name="popup_filtro_incidencias">Incidencias</string>
     <string name="popup_filtro_favoritos">Favoritos</string>
-    <string name="notificaciones_nuevasIncidencias">Nuevas incidencias encontradas!</string>
+    <string name="activity_configuracion_textView_tituloNotificaciones">Notificaciones</string>
+    <string name="activity_configuracion_checkBox_IncidenciasFavoritas">Incidencias Favoritas</string>
+    <string name="activity_configuracion_checkBox_IncidenciasNuevas">Nuevas Incidencias</string>
+    <string name="activity_configuracion_textView_tituloIdioma">Idioma de la aplicación</string>
+    <string name="activity_configuracion_toast_actualizado">¡Configuracion actualizada correctamente!</string>
+    <string name="activity_configuracion_button_aplicarConfig">Aplicar Configuracion</string>
+
+    <string name="notificaciones_nuevasIncidencias">¡Nuevas incidencias encontradas!</string>
     <string name="notificaciones_pulsaMasInfo">Pulsa para ver mas detalles</string>
     <string name="incidencia_resuelta">Incidencia resuelta</string>
+
     <plurals name="incidencia_resuelta">
         <item quantity="one">%d incidencia favorita ha sido resuelta</item>
         <item quantity="other">%d incidencias favoritas han sido resueltas</item>
     </plurals>
+
+    <string-array name="idiomas_array">
+        <item>Español</item>
+        <item>Inglés</item>
+        <item>Euskera</item>
+    </string-array>
 
 </resources>

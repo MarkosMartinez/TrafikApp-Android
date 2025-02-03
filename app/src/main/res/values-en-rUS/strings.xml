@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<string name="activity_login_textView_titulo">Login</string>
+<string name="activity_login_input_email">Email</string>
+<string name="activity_login_input_password">Password</string>
+<string name="activity_login_button_login">Log In</string>
+<string name="activity_login_toast_errorCredenciales">Invalid credentials</string>
+<string name="activity_main_filtroInfo_camaras">Cameras</string>
+<string name="activity_main_filtroInfo_incidencias">Incidents</string>
+<string name="activity_main_filtroInfo_favoritos">Favorites</string>
+<string name="activity_main_toast_logout">Session closed</string>
+<string name="activity_main_toast_error_incidencias">Error retrieving incidents</string>
+<string name="activity_main_toast_error_camaras">Error retrieving cameras</string>
+<string name="activity_main_toast_actualizandoMapa">Updating map...</string>
+<string name="activity_main_alert_dialog_errorTitulo">Error loading data!</string>
+<string name="activity_main_alert_dialog_errorCarga">Check your connection and restart the app!</string>
+<string name="camara_actions_bottom_sheet_titulo">Camera Information</string>
+<string name="camara_actions_bottom_sheet_añadirFavorito">Add to favorites</string>
+<string name="camara_actions_bottom_sheet_eliminarFavorito">Remove from favorites</string>
+<string name="camara_actions_bottom_sheet_masInfo">More information</string>
+<string name="activity_adaptador_marcador_masInfo">Tap to see more information</string>
+<string name="activity_camara_noDisponible">Not available</string>
+<string name="activity_camara_textView_nombreCamara">Name:</string>
+<string name="activity_camara_textView_nombreCarretera">Road:</string>
+<string name="activity_camara_textView_ubicacion">Location:</string>
+<string name="popup_filtro_camaras">Cameras</string>
+<string name="popup_filtro_incidencias">Incidents</string>
+<string name="popup_filtro_favoritos">Favorites</string>
+<string name="activity_configuracion_textView_tituloNotificaciones">Notifications</string>
+<string name="activity_configuracion_checkBox_IncidenciasFavoritas">Favorite Incidents</string>
+<string name="activity_configuracion_checkBox_IncidenciasNuevas">New Incidents</string>
+<string name="activity_configuracion_textView_tituloIdioma">App Language</string>
+<string name="activity_configuracion_toast_actualizado">Settings updated successfully!</string>
+<string name="activity_configuracion_button_aplicarConfig">Apply Configuration</string>
+
+<string name="notificaciones_nuevasIncidencias">New incidents found!</string>
+<string name="notificaciones_pulsaMasInfo">Tap to see more details</string>
+<string name="incidencia_resuelta">Incident resolved</string>
+
+<plurals name="incidencia_resuelta">
+    <item quantity="one">%d favorite incident has been resolved</item>
+    <item quantity="other">%d favorite incidents have been resolved</item>
+</plurals>
+
+<string-array name="idiomas_array">
+    <item>Spanish</item>
+    <item>English</item>
+    <item>Basque</item>
+</string-array>
+
+</resources>

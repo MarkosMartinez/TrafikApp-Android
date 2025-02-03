@@ -3,6 +3,7 @@ package com.reto.trafikapp;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -16,6 +17,7 @@ import android.widget.PopupWindow;
 import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -41,6 +43,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.reto.trafikapp.BBDD.CamarasFavoritosBBDD;
 import com.reto.trafikapp.BBDD.IncidenciasFavoritosBBDD;
 import com.reto.trafikapp.adapter.MarcadorAdapter;
+import com.reto.trafikapp.configuracion.AppConfig;
+import com.reto.trafikapp.configuracion.ConfigActivity;
 import com.reto.trafikapp.model.Camara;
 import com.reto.trafikapp.model.Incidencia;
 import com.reto.trafikapp.worker.IncidenciasWorker;
@@ -67,24 +71,63 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private GoogleMap mMap;
     private ImageButton imageButtonFiltro;
     private ImageButton imageButtonLogout;
+    private ImageButton imageButtonConfig;
     private CheckBox checkBoxCamaras;
     private CheckBox checkBoxIncidencias;
     private CheckBox checkBoxFavoritos;
     private static final String MAPVIEW_BUNDLE_KEY = "MapViewBundleKey";
+    private static final int REQUEST_CODE_CONFIG = 1;
+
+    private void actualizarIdioma(){
+        SharedPreferences spConfig = getSharedPreferences("config", MODE_PRIVATE);
+        Log.d("MainActivity", "Idioma: " + spConfig.getString("idioma", "Español"));
+        Locale locale;
+        switch (spConfig.getString("idioma", "Español")) {
+            case "English":
+            case "Inglés":
+            case "Ingelesa":
+                locale = new Locale("en");
+                break;
+            case "Basque":
+            case "Vasco":
+            case "Euskera":
+                locale = new Locale("eu");
+                break;
+            case "Spanish":
+            case "Español":
+            case "Gaztelania":
+                locale = new Locale("es");
+                break;
+            default:
+                locale = new Locale("es");
+                break;
+        }
+        AppConfig.vibrar(this, 100);
+
+        Locale.setDefault(locale);
+        Resources resources = getResources();
+        Configuration config = resources.getConfiguration();
+        config.setLocale(locale);
+        resources.updateConfiguration(config, resources.getDisplayMetrics());
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main); // Llamarlo antes de los findViewById
+
         gif_loading = findViewById(R.id.gif_loading);
         gif_loading.setVisibility(pl.droidsonroids.gif.GifImageView.VISIBLE);
         imageButtonFiltro = findViewById(R.id.imageButtonFiltro);
         imageButtonLogout = findViewById(R.id.imageButtonLogout);
+        imageButtonConfig = findViewById(R.id.imageButtonConfig);
         mapView = findViewById(R.id.mapView);
         Bundle mapViewBundle = null;
         if (savedInstanceState != null) {
             mapViewBundle = savedInstanceState.getBundle(MAPVIEW_BUNDLE_KEY);
         }
+
+        actualizarIdioma();
 
         configurarWorker();
 
@@ -95,6 +138,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (modoOscuroFlags == android.content.res.Configuration.UI_MODE_NIGHT_YES) {
             imageButtonLogout.setImageResource(R.drawable.logout_blanco);
             imageButtonFiltro.setImageResource(R.drawable.filter_blanco);
+            imageButtonConfig.setImageResource(R.drawable.config_blanco);
         }
 
         //Obtener las incidencias
@@ -141,8 +185,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         imageButtonLogout.setOnClickListener(v -> {
             AppConfig.vibrar(MainActivity.this, 200);
-            SharedPreferences spConfig = getSharedPreferences("config", MODE_PRIVATE);
-            SharedPreferences.Editor editorConfig = spConfig.edit();
+            SharedPreferences sharedPreferences = getSharedPreferences("config", MODE_PRIVATE);
+            SharedPreferences.Editor editorConfig = sharedPreferences.edit();
             editorConfig.putBoolean("estaLogueado", false);
             editorConfig.apply();
 
@@ -168,6 +212,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             Toast.makeText(MainActivity.this, R.string.activity_main_toast_actualizandoMapa, Toast.LENGTH_SHORT).show();
             recreate();
             return true;
+        });
+
+        imageButtonConfig.setOnClickListener(v -> {
+            AppConfig.vibrar(MainActivity.this, 100);
+            Intent intent = new Intent(this, ConfigActivity.class);
+            startActivityForResult(intent, REQUEST_CODE_CONFIG);
         });
 
         imageButtonFiltro.setOnClickListener(v -> {
@@ -216,6 +266,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         });
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_CONFIG && resultCode == RESULT_OK) {
+            recreate();
+        }
     }
 
     private void configurarWorker() {
