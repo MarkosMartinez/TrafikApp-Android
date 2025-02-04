@@ -445,7 +445,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         LatLng euskadi = new LatLng(43.189985,-2.407536);
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(euskadi, 9), 2500, null);
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(euskadi, 9), 3000, null);
 
         // Configurar el adaptador de InfoWindow
         mMap.setInfoWindowAdapter(new MarcadorAdapter(getLayoutInflater(), incidenciasFavoritosBBDD, camarasFavoritosBBDD));

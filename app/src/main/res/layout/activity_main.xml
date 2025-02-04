@@ -20,6 +20,7 @@
         android:layout_marginTop="1dp"
         android:background="@android:color/transparent"
         android:scaleType="fitXY"
+        android:rotationY="180"
         android:src="@drawable/logout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
