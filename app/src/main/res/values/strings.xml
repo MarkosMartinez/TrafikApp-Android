@@ -32,6 +32,7 @@
     <string name="activity_configuracion_checkBox_IncidenciasFavoritas">Incidencias Favoritas</string>
     <string name="activity_configuracion_checkBox_IncidenciasNuevas">Nuevas Incidencias</string>
     <string name="activity_configuracion_textView_tituloIdioma">Idioma de la aplicación</string>
+    <string name="activity_configuracion_textView_Idioma">Idioma:</string>
     <string name="activity_configuracion_toast_actualizado">¡Configuracion actualizada correctamente!</string>
     <string name="activity_configuracion_button_aplicarConfig">Aplicar Configuracion</string>
     <string name="activity_configuracion_toast_sinPermisoNotificaciones">¡No se han concedido permisos para recibir notificaciones!</string>

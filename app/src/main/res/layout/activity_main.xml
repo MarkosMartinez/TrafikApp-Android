@@ -48,7 +48,7 @@
         android:scaleType="fitXY"
         app:layout_constraintEnd_toStartOf="@+id/imageButtonConfig"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/filter" />
+        app:srcCompat="@drawable/filtro" />
 
     <!--    Modo sin Key?-->
 <!--    xmlns:app="http://schemas.android.com/apk/res-auto"-->

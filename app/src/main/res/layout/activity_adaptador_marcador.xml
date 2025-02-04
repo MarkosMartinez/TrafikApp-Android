@@ -17,7 +17,6 @@
             android:orientation="horizontal"
             android:gravity="center_vertical">
 
-            <!-- Espacio invisible del mismo tamaño que el ImageButton para centrar el titulo :)-->
             <View
                 android:layout_width="24dp"
                 android:layout_height="24dp"

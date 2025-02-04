@@ -6,5 +6,6 @@
         <item name="colorSurface">@color/fondo_oscuro</item>
         <item name="colorOnSurface">@color/white</item>
         <item name="colorPrimary">@color/white</item>
+        <item name="android:statusBarColor">@color/statusBarColor</item>
     </style>
 </resources>

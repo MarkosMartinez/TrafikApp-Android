@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         int modoOscuroFlags = getResources().getConfiguration().uiMode & android.content.res.Configuration.UI_MODE_NIGHT_MASK;
         if (modoOscuroFlags == android.content.res.Configuration.UI_MODE_NIGHT_YES) {
             imageButtonLogout.setImageResource(R.drawable.logout_blanco);
-            imageButtonFiltro.setImageResource(R.drawable.filter_blanco);
+            imageButtonFiltro.setImageResource(R.drawable.filtro_blanco);
             imageButtonConfig.setImageResource(R.drawable.config_blanco);
         }
 
@@ -269,7 +269,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                                 BackoffPolicy.LINEAR,
                                 PeriodicWorkRequest.MIN_BACKOFF_MILLIS,
                                 TimeUnit.MILLISECONDS)
-                        .setInitialDelay(10, TimeUnit.SECONDS)
+                        .setInitialDelay(30, TimeUnit.SECONDS)
                         .build();
 
         WorkManager workManager = WorkManager.getInstance(this);
@@ -445,7 +445,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         LatLng euskadi = new LatLng(43.189985,-2.407536);
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(euskadi, 9));
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(euskadi, 9), 2500, null);
 
         // Configurar el adaptador de InfoWindow
         mMap.setInfoWindowAdapter(new MarcadorAdapter(getLayoutInflater(), incidenciasFavoritosBBDD, camarasFavoritosBBDD));
@@ -491,10 +491,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 gif_loading.setImageResource(R.drawable.gif_advertencia);
                 gif_loading.setVisibility(GifImageView.VISIBLE);
                 new AlertDialog.Builder(MainActivity.this)
-                    .setTitle(R.string.activity_main_alert_dialog_errorTitulo)
-                    .setMessage(R.string.activity_main_alert_dialog_errorCarga)
-                    .setPositiveButton(android.R.string.ok, (dialog, which) -> dialog.dismiss())
-                    .show();
+                        .setTitle(R.string.activity_main_alert_dialog_errorTitulo)
+                        .setMessage(R.string.activity_main_alert_dialog_errorCarga)
+                        .setPositiveButton(android.R.string.ok, (dialog, which) -> dialog.dismiss())
+                        .show();
 
                 gif_loading.setOnClickListener(v -> {
                     new AlertDialog.Builder(MainActivity.this)

@@ -21,6 +21,8 @@ import com.reto.trafikapp.R;
 
 import java.util.Locale;
 
+
+
 public class ConfigActivity extends AppCompatActivity {
     private CheckBox checkBoxIncidenciasFavoritas;
     private CheckBox checkBoxIncidenciasNuevas;

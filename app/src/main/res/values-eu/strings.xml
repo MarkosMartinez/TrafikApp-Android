@@ -31,6 +31,7 @@
     <string name="activity_configuracion_checkBox_IncidenciasFavoritas">Gogoko inzidenteak</string>
     <string name="activity_configuracion_checkBox_IncidenciasNuevas">Inzidente berriak</string>
     <string name="activity_configuracion_textView_tituloIdioma">Aplikazioaren hizkuntza</string>
+    <string name="activity_configuracion_textView_Idioma">Hizkuntza:</string>
     <string name="activity_configuracion_toast_actualizado">Ezarpenak ongi eguneratu dira!</string>
     <string name="activity_configuracion_button_aplicarConfig">Aplikatu ezarpenak</string>
     <string name="activity_configuracion_toast_sinPermisoNotificaciones">Jakinarazpenak jasotzeko baimenak ez dira eman!</string>

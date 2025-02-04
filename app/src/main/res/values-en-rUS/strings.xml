@@ -31,6 +31,7 @@
 <string name="activity_configuracion_checkBox_IncidenciasFavoritas">Favorite Incidents</string>
 <string name="activity_configuracion_checkBox_IncidenciasNuevas">New Incidents</string>
 <string name="activity_configuracion_textView_tituloIdioma">App Language</string>
+<string name="activity_configuracion_textView_Idioma">Language:</string>
 <string name="activity_configuracion_toast_actualizado">Settings updated successfully!</string>
 <string name="activity_configuracion_button_aplicarConfig">Apply Configuration</string>
     <string name="activity_configuracion_toast_sinPermisoNotificaciones">Notification permissions not granted!</string>
