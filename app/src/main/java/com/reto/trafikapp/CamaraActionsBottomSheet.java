@@ -54,6 +54,7 @@ public class CamaraActionsBottomSheet {
         nombreCarretera = bottomSheetView.findViewById(R.id.textViewCarretera);
         ubicacionCarretera = bottomSheetView.findViewById(R.id.textViewUbicacion);
 
+        //Para cargar la imagen mostrando un error si no carga
             Glide.with(context)
                     .load(camara.getUrlImage())
                     .placeholder(R.drawable.gif_cargando)
@@ -61,15 +62,18 @@ public class CamaraActionsBottomSheet {
                     .transform(new RoundedCornersTransformation(20, 5))
                     .into(imageViewCamara);
 
+        //Mostar la información de la cámara
         nombreCamara.setText(!Objects.equals(camara.getCameraName(), "null") ? camara.getCameraName() : context.getString(R.string.activity_camara_noDisponible));
         nombreCarretera.setText(!Objects.equals(camara.getRoad(), "null") ? camara.getRoad() : context.getString(R.string.activity_camara_noDisponible));
         ubicacionCarretera.setText(!Objects.equals(camara.getAddress(), "null") ? camara.getAddress() : context.getString(R.string.activity_camara_noDisponible));
 
+        //Cambiar el texto del botón y la imagen del botón de favorito si la cámara es favorita
         if (camarasFavoritosBBDD.esFavorito(camara.getCameraId())) {
             buttonFavorito.setText(R.string.camara_actions_bottom_sheet_eliminarFavorito);
             imageButtonFav.setImageResource(R.drawable.fav_seleccionado);
         }
 
+        //Listener del boton de favorito
         buttonFavorito.setOnClickListener(v -> {
             camarasFavoritosBBDD.alternarFavorito(camara);
             AppConfig.vibrar(context, 100);
@@ -83,6 +87,7 @@ public class CamaraActionsBottomSheet {
 
         });
 
+        //Listener del icono (ImageButton) de favorito
         imageButtonFav.setOnClickListener(v -> {
             camarasFavoritosBBDD.alternarFavorito(camara);
             AppConfig.vibrar(context, 100);

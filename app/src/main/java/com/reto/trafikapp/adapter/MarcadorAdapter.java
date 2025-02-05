@@ -32,12 +32,14 @@ public class MarcadorAdapter implements GoogleMap.InfoWindowAdapter{
         TextView descripcionText = vista.findViewById(R.id.descripcion);
         ImageView imageView = vista.findViewById(R.id.imgFav);
 
+        //Comprobamos si el marcador es una incidencia o una camara para mostrar la informacion correspondiente
         if (tag instanceof Incidencia) {
             Incidencia incidencia = (Incidencia) tag;
             tituloText.setText(incidencia.getIncidenceType());
             descripcionText.setText(incidencia.getCause());
             descripcionText.setTypeface(null, Typeface.NORMAL);
 
+            //Cambiamos la imagen del favorito segun si es favorito o no
             if(incidenciasFavoritosBBDD.esFavorito(incidencia.getIncidenceId())){
                 imageView.setImageResource(R.drawable.fav_seleccionado);
             }else{
@@ -46,10 +48,10 @@ public class MarcadorAdapter implements GoogleMap.InfoWindowAdapter{
         } else if (tag instanceof Camara) {
             Camara camara = (Camara) tag;
             tituloText.setText(camara.getCameraName());
-            descripcionText.setText("Pulsa para ver mas informacion");
+            descripcionText.setText(R.string.activity_adaptador_marcador_masInfo);
             descripcionText.setTypeface(null, android.graphics.Typeface.ITALIC);
 
-
+            //Cambiamos la imagen del favorito segun si es favorito o no
             if(camarasFavoritosBBDD.esFavorito(camara.getCameraId())){
                 imageView.setImageResource(R.drawable.fav_seleccionado);
             }else{

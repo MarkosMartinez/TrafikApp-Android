@@ -47,11 +47,13 @@ public class IncidenciasWorker extends Worker {
     @NonNull
     @Override
     public Result doWork() {
-        createNotificationChannel();
+        crearCanalDeNotificaciones();
 
+        //Obtener los favoritos actuales y la configuracion de notificaciones
         Set<String> favoritosActuales = incidenciasFavoritosBBDD.obtenerFavoritosActuales();
         SharedPreferences sharedPreferences = context.getSharedPreferences("config", Context.MODE_PRIVATE);
-        if(sharedPreferences.getBoolean("incidenciasFavoritas", false)) Log.d("IncidenciasWorker", "Comprobando incidencias favoritas eliminadas");
+        if(sharedPreferences.getBoolean("incidenciasFavoritas", false))
+            Log.d("IncidenciasWorker", "Comprobando incidencias favoritas eliminadas");
 
         final CountDownLatch latch = new CountDownLatch(1);
         final Set<String> incidenciasEliminadas = new HashSet<>(favoritosActuales);
@@ -65,6 +67,7 @@ public class IncidenciasWorker extends Worker {
                     incidenciasEliminadas.remove(incidencia.getIncidenceId());
                 }
 
+                //Comprobar si las incidencias favoritas han sido eliminadas
                 if (!incidenciasEliminadas.isEmpty()) {
                     SQLiteDatabase db = incidenciasFavoritosBBDD.getWritableDatabase();
                     for (String idEliminada : incidenciasEliminadas) {
@@ -73,7 +76,8 @@ public class IncidenciasWorker extends Worker {
                     }
                     db.close();
 
-                    if(sharedPreferences.getBoolean("incidenciasFavoritas", false)) showNotification("Incidencias resueltas", context.getResources().getQuantityString(R.plurals.incidencia_resuelta, incidenciasEliminadas.size(), incidenciasEliminadas.size()));
+                    if(sharedPreferences.getBoolean("incidenciasFavoritas", false))
+                        showNotification("Incidencias resueltas", context.getResources().getQuantityString(R.plurals.incidencia_resuelta, incidenciasEliminadas.size(), incidenciasEliminadas.size()));
                 }
 
                 latch.countDown();
@@ -95,6 +99,7 @@ public class IncidenciasWorker extends Worker {
         return Result.success();
     }
 
+    //Metodo para comprobar si hay nuevas incidencias
     private void nuevasIncidencias(List<Incidencia> incidencias, SharedPreferences sharedPreferences) {
         if(!sharedPreferences.getBoolean("incidenciasNuevas", false)){
             incidenciasBBDD.vaciar();
@@ -113,20 +118,21 @@ public class IncidenciasWorker extends Worker {
         incidenciasBBDD.rellenar(incidencias);
     }
 
-    private void createNotificationChannel() {
+    //Metodo para crear el canal de notificaciones (si ya existe no lo crea)
+    private void crearCanalDeNotificaciones() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel(
+            NotificationChannel canal = new NotificationChannel(
                     CHANNEL_ID,
                     "Notificaciones de incidencias",
                     NotificationManager.IMPORTANCE_DEFAULT
             );
-            channel.setDescription("Canal para notificaciones de incidencias nuevas o resueltas");
-
+            canal.setDescription(context.getString(R.string.notificaciones_canal_descripcion));
             NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(channel);
+            notificationManager.createNotificationChannel(canal);
         }
     }
 
+    //Metodo para mostrar la notificacion con los parametros recibidos
     private void showNotification(String title, String message) {
         Intent intent = new Intent(context, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -142,18 +148,12 @@ public class IncidenciasWorker extends Worker {
                 .setContentIntent(pendingIntent)
                 .setDefaults(NotificationCompat.DEFAULT_ALL);
 
-        NotificationManager notificationManager =
-                (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel(
-                    CHANNEL_ID,
-                    "TrafikApp Notificaciones",
-                    NotificationManager.IMPORTANCE_HIGH);
-            channel.enableLights(true);
-            channel.enableVibration(true);
-            notificationManager.createNotificationChannel(channel);
-        }
+        NotificationChannel channel = new NotificationChannel(CHANNEL_ID,context.getString(R.string.app_name) + " " + context.getString(R.string.activity_configuracion_textView_tituloNotificaciones), NotificationManager.IMPORTANCE_HIGH);
+        channel.enableLights(true);
+        channel.enableVibration(true);
+        notificationManager.createNotificationChannel(channel);
 
         notificationManager.notify((int) System.currentTimeMillis(), builder.build());
     }

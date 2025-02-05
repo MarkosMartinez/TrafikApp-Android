@@ -36,11 +36,12 @@
     <string name="activity_configuracion_textView_Idioma">Idioma:</string>
     <string name="activity_configuracion_toast_actualizado">¡Configuracion actualizada correctamente!</string>
     <string name="activity_configuracion_button_aplicarConfig">Aplicar Configuracion</string>
-    <string name="activity_configuracion_toast_sinPermisoNotificaciones">¡No se han concedido permisos para recibir notificaciones!</string>
-    <string name="activity_configuracion_toast_permisoNotificaciones">Se han concedido permisos para recibir notificaciones</string>
+    <string name="activity_configuracion_toast_sinPermisoNotificaciones">¡No se han dado permisos para recibir notificaciones!</string>
+    <string name="activity_configuracion_toast_permisoNotificaciones">Se han dado permisos para recibir notificaciones</string>
 
     <string name="notificaciones_nuevasIncidencias">¡Nuevas incidencias encontradas!</string>
     <string name="notificaciones_pulsaMasInfo">Pulsa para ver mas detalles</string>
+    <string name="notificaciones_canal_descripcion">Canal para notificaciones de incidencias nuevas o resueltas</string>
     <string name="incidencia_resuelta">Incidencia resuelta</string>
 
     <plurals name="incidencia_resuelta">

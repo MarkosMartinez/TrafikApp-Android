@@ -43,14 +43,14 @@ public class ConfigActivity extends AppCompatActivity {
         spinnerIdioma = findViewById(R.id.spinnerIdioma);
         buttonAplicarConfig = findViewById(R.id.buttonAplicarConfig);
 
+        //Para marcar o desmarcar los checkBox segun la configuracion guardada
         checkBoxIncidenciasFavoritas.setChecked(sharedPreferences.getBoolean("incidenciasFavoritas", false));
         checkBoxIncidenciasNuevas.setChecked(sharedPreferences.getBoolean("incidenciasNuevas", false));
 
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.idiomas_array, android.R.layout.simple_spinner_item);
+        //Para cargar el spinner con los idiomas y seleccionar el idioma guardado
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.idiomas_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerIdioma.setAdapter(adapter);
-
         String idiomaGuardado = sharedPreferences.getString("idioma", "Español");
         String idiomaNormalizado = idiomaGuardado.toLowerCase(Locale.ROOT);
         int position = 0;
@@ -63,6 +63,7 @@ public class ConfigActivity extends AppCompatActivity {
         }
         spinnerIdioma.setSelection(position);
 
+        //Para solicitar permisos de notificaciones cuando se marque la casilla (si no tiene permisos)
         checkBoxIncidenciasFavoritas.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -72,7 +73,6 @@ public class ConfigActivity extends AppCompatActivity {
                 }
             }
         });
-
         checkBoxIncidenciasNuevas.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -83,6 +83,7 @@ public class ConfigActivity extends AppCompatActivity {
             }
         });
 
+        //Para aplicar la configuracion guardada
         buttonAplicarConfig.setOnClickListener(v -> {
             SharedPreferences.Editor editor = sharedPreferences.edit();
 
@@ -99,6 +100,8 @@ public class ConfigActivity extends AppCompatActivity {
 
     }
 
+    //Para comprobar si se han concedido los permisos de notificaciones
+    //En caso de que se denieguen los permisos, se desmarcan las casillas
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -113,6 +116,7 @@ public class ConfigActivity extends AppCompatActivity {
         }
     }
 
+    //Para cambiar el idioma de la aplicacion
     private void setIdioma(String language) {
         Locale locale;
         locale = new Locale(language);

@@ -39,6 +39,8 @@ public class CamarasFavoritosBBDD extends SQLiteOpenHelper {
         onCreate(db);
     }
 
+    //Para comprobar si las camaras favoritas siguen existiendo en la API
+    //Si no existen en la API, se eliminan de la BBDD
     public void comprobarCamaras(List<Camara> camarasApi) {
         if (camarasApi == null) {
             camarasApi = new ArrayList<>();
@@ -69,6 +71,7 @@ public class CamarasFavoritosBBDD extends SQLiteOpenHelper {
         db.close();
     }
 
+    //Para alternar el favorito de una camara
     public void alternarFavorito(Camara camara) {
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "SELECT * FROM " + TABLE_NAME + " WHERE " + ID + "=?";
@@ -84,6 +87,7 @@ public class CamarasFavoritosBBDD extends SQLiteOpenHelper {
         db.close();
     }
 
+    //Para comprobar si una camara es favorita
     public Boolean esFavorito(int id){
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "SELECT * FROM " + TABLE_NAME + " WHERE " + ID + " = '" + id + "'";
@@ -94,6 +98,7 @@ public class CamarasFavoritosBBDD extends SQLiteOpenHelper {
         return esFavorito;
     }
 
+    //Para vaciar la tabla de camaras favoritas
     public void vaciar(){
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("DELETE FROM " + TABLE_NAME);

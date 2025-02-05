@@ -106,6 +106,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             mapViewBundle = savedInstanceState.getBundle(MAPVIEW_BUNDLE_KEY);
         }
 
+        // Para las notificaciones
         configurarWorker();
 
         mapView.onCreate(mapViewBundle);
@@ -159,6 +160,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
 
+        //Para cerrar sesion
         imageButtonLogout.setOnClickListener(v -> {
             AppConfig.vibrar(MainActivity.this, 200);
             SharedPreferences sharedPreferences = getSharedPreferences("config", MODE_PRIVATE);
@@ -183,6 +185,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             finish();
         });
 
+        //Para recargar la actividad entera
         imageButtonLogout.setOnLongClickListener(v -> {
             AppConfig.vibrar(MainActivity.this, 100);
             Toast.makeText(MainActivity.this, R.string.activity_main_toast_actualizandoMapa, Toast.LENGTH_SHORT).show();
@@ -190,12 +193,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             return true;
         });
 
+        //Para abrir la configuracion
         imageButtonConfig.setOnClickListener(v -> {
             AppConfig.vibrar(MainActivity.this, 100);
             Intent intent = new Intent(this, ConfigActivity.class);
             startActivityForResult(intent, REQUEST_CODE_CONFIG);
         });
 
+        //Para los filtros
         imageButtonFiltro.setOnClickListener(v -> {
             AppConfig.vibrar(MainActivity.this, 100);
 
@@ -244,6 +249,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     }
 
+    //Cuando se vuelve de la vista de configuracion, como el idioma ha podido cambiar, se recarga la actividad completa
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -252,6 +258,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
+    //Para las notificaciones
     private void configurarWorker() {
         Constraints constraints = new Constraints.Builder()
                 .setRequiredNetworkType(NetworkType.CONNECTED)
@@ -260,6 +267,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .setRequiresDeviceIdle(false)
                 .build();
 
+        //Para que se ejecute cada 15 minutos pero con un retardo inicial de 1 minuto
+        //Y haciendo que si falla se vuelva a intentar con un retardo lineal (cada vez mas tiempo)
         PeriodicWorkRequest periodicWorkRequest =
                 new PeriodicWorkRequest.Builder(
                         IncidenciasWorker.class,
@@ -269,7 +278,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                                 BackoffPolicy.LINEAR,
                                 PeriodicWorkRequest.MIN_BACKOFF_MILLIS,
                                 TimeUnit.MILLISECONDS)
-                        .setInitialDelay(30, TimeUnit.SECONDS)
+                        .setInitialDelay(1, TimeUnit.MINUTES)
                         .build();
 
         WorkManager workManager = WorkManager.getInstance(this);
@@ -284,6 +293,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .enqueueUniquePeriodicWork("checkIncidencias", ExistingPeriodicWorkPolicy.REPLACE, periodicWorkRequest);
     }
 
+    //Para obtener el estado de los checkbox de los filtros
     private void cargarFiltros(){
         SharedPreferences sharedPreferences = getSharedPreferences("filtro", MODE_PRIVATE);
         checkBoxCamaras.setChecked(sharedPreferences.getBoolean("camaras", true));
@@ -292,6 +302,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     }
 
+    //Para alternar con el filtro de la camara
     private void cargarFiltroCamara(){
         SharedPreferences sharedPreferences = getSharedPreferences("filtro", MODE_PRIVATE);
         boolean camarasChecked = sharedPreferences.getBoolean("camaras", true);
@@ -340,6 +351,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
+    //Para alternar con el filtro de las incidencias
     private void cargarFiltroIncidencias(){
         SharedPreferences sharedPreferences = getSharedPreferences("filtro", MODE_PRIVATE);
         boolean camarasChecked = sharedPreferences.getBoolean("camaras", true);
@@ -388,6 +400,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
+    //Para alternar con el filtro de los favoritos
+    //Teniendo en cuenta el estado de los otros filtros
     public void cargarFiltroFavoritos(){
         SharedPreferences sharedPreferences = getSharedPreferences("filtro", MODE_PRIVATE);
         boolean camarasChecked = sharedPreferences.getBoolean("camaras", true);
@@ -445,12 +459,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         LatLng euskadi = new LatLng(43.189985,-2.407536);
+        //Para centrar la camara en Euskadi con una pequeña animacion
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(euskadi, 9), 3000, null);
 
-        // Configurar el adaptador de InfoWindow
+        //Configurar el adaptador de InfoWindow con uno personalizado
         mMap.setInfoWindowAdapter(new MarcadorAdapter(getLayoutInflater(), incidenciasFavoritosBBDD, camarasFavoritosBBDD));
 
-
+        //Cambiar de vista del mapa dependiendo del tema (modo oscuro...) del dispositivo
         int modoOscuroFlags = getResources().getConfiguration().uiMode & android.content.res.Configuration.UI_MODE_NIGHT_MASK;
         if (modoOscuroFlags == android.content.res.Configuration.UI_MODE_NIGHT_YES) {
             try {
@@ -482,6 +497,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mapView.onSaveInstanceState(mapViewBundle);
     }
 
+    //Para ocultar la carga o mostrar el icono de error dependiendo de si todo ha ido bien o no
     public void ocultarCarga(){
         if(++carga >= cargamax && !errorCarga) {
             gif_loading.setVisibility(GifImageView.INVISIBLE);
@@ -507,6 +523,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
+    //Para añadir las incidencias al mapa
     public void addIncidencias() {
         runOnUiThread(() -> {
             mapView.getMapAsync(googleMap -> {
@@ -522,6 +539,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         marcadores.add(marker);
                     }
                     cargarFiltroIncidencias();
+
                     // Actualizar los iconos de los favoritos
                     for (Marker marker : marcadores) {
                         Incidencia incidencia = (Incidencia) marker.getTag();
@@ -542,6 +560,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
     }
 
+    //Para añadir las camaras al mapa
     public void addCamaras(){
         runOnUiThread(() -> {
             for (Camara camara : camaras) {
@@ -555,6 +574,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     marker.setTag(camara);
                     marcadores.add(marker);
 
+                    //Para añadir los listener a los marcadores y dependiendo del tipo de marcador, hacer una accion u otra
                     googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
                         @Override
                         public void onInfoWindowClick(Marker marker) {

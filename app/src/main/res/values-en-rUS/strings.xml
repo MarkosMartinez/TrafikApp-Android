@@ -1,11 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
 <string name="activity_login_textView_titulo">Login</string>
 <string name="activity_login_input_email">Email</string>
 <string name="activity_login_input_password">Password</string>
 <string name="activity_login_button_login">Log In</string>
 <string name="activity_login_toast_errorCredenciales">Invalid credentials</string>
-    <string name="activity_login_checkBox_verPass">Show password</string>
+<string name="activity_login_checkBox_verPass">Show password</string>
 <string name="activity_main_filtroInfo_camaras">Cameras</string>
 <string name="activity_main_filtroInfo_incidencias">Incidents</string>
 <string name="activity_main_filtroInfo_favoritos">Favorites</string>
@@ -40,6 +39,7 @@
 
 <string name="notificaciones_nuevasIncidencias">New incidents found!</string>
 <string name="notificaciones_pulsaMasInfo">Tap to see more details</string>
+<string name="notificaciones_canal_descripcion">Channel for notifications of new or resolved incidents</string>
 <string name="incidencia_resuelta">Incident resolved</string>
 
 <plurals name="incidencia_resuelta">

@@ -23,6 +23,7 @@ public class LlamadasAPI {
 
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
+    //Método para realizar el login en la aplicación
     public void login(String email, String pass, LoginCallback callback) {
         executorService.execute(() -> {
             HttpURLConnection urlConnection = null;
@@ -72,6 +73,7 @@ public class LlamadasAPI {
         void onFailure();
     }
 
+    //Método para obtener las incidencias
     public void getIncidencias(IncidenciasCallback callback) {
         executorService.execute(() -> {
             HttpURLConnection urlConnection = null;
@@ -135,6 +137,7 @@ public class LlamadasAPI {
         void onFailure();
     }
 
+    //Método para obtener las cámaras
     public void getCamaras(CamarasCallback callback) {
         executorService.execute(() -> {
             HttpURLConnection urlConnection = null;

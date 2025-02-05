@@ -43,6 +43,8 @@ public class IncidenciasFavoritosBBDD extends SQLiteOpenHelper {
         onCreate(db);
     }
 
+    //Para comprobar si las incidencias favoritas siguen existiendo en la API
+    //En caso de que no, se eliminan de la base de datos
     public void comprobarIncidencias(List<Incidencia> incidenciasApi) {
         if (incidenciasApi == null) {
             incidenciasApi = new ArrayList<>();
@@ -73,6 +75,7 @@ public class IncidenciasFavoritosBBDD extends SQLiteOpenHelper {
         db.close();
     }
 
+    //Para alternar el estado de favorito de una incidencia
     public void alternarFavorito(Incidencia incidencia) {
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "SELECT * FROM " + TABLE_NAME + " WHERE " + ID + "=?";
@@ -88,6 +91,7 @@ public class IncidenciasFavoritosBBDD extends SQLiteOpenHelper {
         db.close();
     }
 
+    //Para comprobar si una incidencia es favorita
     public Boolean esFavorito(String id){
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "SELECT * FROM " + TABLE_NAME + " WHERE " + ID + " = '" + id + "'";
@@ -98,6 +102,7 @@ public class IncidenciasFavoritosBBDD extends SQLiteOpenHelper {
         return esFavorito;
     }
 
+    //Para obtener las incidencias favoritas actuales
     public Set<String> obtenerFavoritosActuales() {
         Set<String> favoritos = new HashSet<>();
         SQLiteDatabase db = getReadableDatabase();
@@ -112,6 +117,7 @@ public class IncidenciasFavoritosBBDD extends SQLiteOpenHelper {
         return favoritos;
     }
 
+    //Para vaciar la tabla de favoritos
     public void vaciar(){
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("DELETE FROM " + TABLE_NAME);

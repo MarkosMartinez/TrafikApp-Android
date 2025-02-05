@@ -40,7 +40,7 @@ public class IncidenciasBBDD extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-
+    //Para obtener las todas incidencias almacenadas en la BBDD
     public Set<String> obtenerIncidencias() {
         Set<String> incidencias = new HashSet<>();
         SQLiteDatabase db = getReadableDatabase();
@@ -55,12 +55,14 @@ public class IncidenciasBBDD extends SQLiteOpenHelper {
         return incidencias;
     }
 
+    //Para vaciar la tabla de incidencias
     public void vaciar(){
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("DELETE FROM " + TABLE_NAME);
         db.close();
     }
 
+    //Para rellenar la tabla de incidencias
     public void rellenar(List<Incidencia> incidencias) {
         SQLiteDatabase db = this.getWritableDatabase();
         for (Incidencia incidencia : incidencias) {

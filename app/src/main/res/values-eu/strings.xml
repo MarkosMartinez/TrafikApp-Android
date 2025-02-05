@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="activity_login_textView_titulo">Saioa hasi</string>
     <string name="activity_login_input_email">Posta elektronikoa</string>
@@ -40,6 +39,7 @@
 
     <string name="notificaciones_nuevasIncidencias">Inzidente berriak aurkitu dira!</string>
     <string name="notificaciones_pulsaMasInfo">Sakatu xehetasun gehiago ikusteko</string>
+    <string name="notificaciones_canal_descripcion">Kanal berriak edo konpondutako inzidenteen jakinarazpenetarako</string>
     <string name="incidencia_resuelta">Inzidentea konponduta</string>
 
     <plurals name="incidencia_resuelta">
