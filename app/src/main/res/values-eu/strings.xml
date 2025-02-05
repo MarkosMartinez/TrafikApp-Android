@@ -5,6 +5,7 @@
     <string name="activity_login_input_password">Pasahitza</string>
     <string name="activity_login_button_login">Hasi saioa</string>
     <string name="activity_login_toast_errorCredenciales">Kredentzialak baliogabeak</string>
+    <string name="activity_login_checkBox_verPass">Ikusi kontraseña</string>
     <string name="activity_main_filtroInfo_camaras">Kamerak</string>
     <string name="activity_main_filtroInfo_incidencias">Inzidenteak</string>
     <string name="activity_main_filtroInfo_favoritos">Gogokoak</string>

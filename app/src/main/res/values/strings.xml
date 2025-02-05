@@ -5,6 +5,7 @@
     <string name="activity_login_input_password">Contraseña</string>
     <string name="activity_login_button_login">Iniciar Sesion</string>
     <string name="activity_login_toast_errorCredenciales">Credenciales no validas</string>
+    <string name="activity_login_checkBox_verPass">Ver contraseña</string>
     <string name="google_maps_key" translatable="false">AIzaSyDlGI_JifsSwqvvGfVNdiaqQNAS2Q9dcX8</string>
     <string name="activity_main_filtroInfo_camaras">Cámaras</string>
     <string name="activity_main_filtroInfo_incidencias">Incidencias</string>

@@ -3,7 +3,9 @@ package com.reto.trafikapp;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.InputType;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.util.Log;
 import android.widget.Toast;
@@ -22,6 +24,7 @@ public class LoginActivity extends AppCompatActivity {
     EditText editTextEmail;
     EditText editTextPass;
     LlamadasAPI llamadasAPI = new LlamadasAPI();
+    CheckBox checkBoxVerPass;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +34,7 @@ public class LoginActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = getSharedPreferences("config", MODE_PRIVATE);
         boolean isLoggedIn = sharedPreferences.getBoolean("estaLogueado", false);
 
+        //Comprobar si esta logueado o no, antes de mostrar el login o redirigir al MainActivity
         if (isLoggedIn) {
             Log.d("LoginActivity", "Usuario logueado");
             startActivity(new Intent(LoginActivity.this, MainActivity.class));
@@ -42,11 +46,22 @@ public class LoginActivity extends AppCompatActivity {
             buttonLogin = findViewById(R.id.buttonLogin);
             editTextEmail = findViewById(R.id.editTextEmail);
             editTextPass = findViewById(R.id.editTextPass);
+            checkBoxVerPass = findViewById(R.id.checkBoxVerPass);
 
             ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
                 Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
                 v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
                 return insets;
+            });
+
+            checkBoxVerPass.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                int position = editTextPass.getSelectionEnd();
+                if (isChecked) {
+                    editTextPass.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+                } else {
+                    editTextPass.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                }
+                editTextPass.setSelection(position);
             });
 
             buttonLogin.setOnClickListener(v -> {

@@ -5,6 +5,7 @@
 <string name="activity_login_input_password">Password</string>
 <string name="activity_login_button_login">Log In</string>
 <string name="activity_login_toast_errorCredenciales">Invalid credentials</string>
+    <string name="activity_login_checkBox_verPass">Show password</string>
 <string name="activity_main_filtroInfo_camaras">Cameras</string>
 <string name="activity_main_filtroInfo_incidencias">Incidents</string>
 <string name="activity_main_filtroInfo_favoritos">Favorites</string>
